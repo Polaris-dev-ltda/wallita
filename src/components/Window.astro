@@ -1,0 +1,139 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  width?: number;
+  height?: number;
+  x?: number;
+  y?: number;
+  isPopup?: boolean;
+}
+
+const { id, title, width = 400, height = 300, x = 100, y = 50, isPopup = false } = Astro.props;
+---
+
+<div
+  class={`window ${isPopup ? 'popup' : ''}`}
+  id={id}
+  data-window
+  style={`width: ${width}px; height: ${height}px; left: ${x}px; top: ${y}px; display: none;`}
+>
+  <div class="title-bar" data-draggable>
+    <span class="title-text">{title}</span>
+    <div class="title-buttons">
+      <button class="title-btn minimize-btn" data-minimize>_</button>
+      <button class="title-btn maximize-btn" data-maximize>□</button>
+      <button class="title-btn close-btn" data-close>X</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .window {
+    position: absolute;
+    background: var(--window-bg);
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light),
+      inset -2px -2px 0 var(--window-border-dark),
+      inset 2px 2px 0 var(--white),
+      4px 4px 0 rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+  }
+
+  .window.popup {
+    animation: popupAppear 0.2s ease-out;
+  }
+
+  @keyframes popupAppear {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .title-bar {
+    background: var(--title-bar);
+    color: var(--white);
+    padding: 4px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    user-select: none;
+  }
+
+  .window.inactive .title-bar {
+    background: var(--title-bar-inactive);
+  }
+
+  .title-text {
+    font-size: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .title-buttons {
+    display: flex;
+    gap: 2px;
+  }
+
+  .title-btn {
+    width: 20px;
+    height: 20px;
+    background: var(--window-bg);
+    border: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light);
+  }
+
+  .title-btn:active {
+    box-shadow:
+      inset 1px 1px 0 var(--window-border-darker),
+      inset -1px -1px 0 var(--window-border-light);
+  }
+
+  .close-btn:hover {
+    background: #c00;
+    color: white;
+  }
+
+  .window-content {
+    flex: 1;
+    padding: 8px;
+    overflow: auto;
+    background: var(--window-bg);
+    color: #000;
+    font-size: 10px;
+  }
+
+  .window-content :global(a) {
+    color: var(--title-bar);
+    text-decoration: underline;
+  }
+
+  .window-content :global(a:hover) {
+    color: var(--neon-green);
+    background: var(--title-bar);
+  }
+</style>

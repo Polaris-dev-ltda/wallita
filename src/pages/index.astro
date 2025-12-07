@@ -1,16 +1,1263 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import Taskbar from '../components/Taskbar.astro';
+import DesktopIcon from '../components/DesktopIcon.astro';
+import Window from '../components/Window.astro';
 
+// Ícones SVG detalhados estilo Windows 95/98
+const icons = {
+  trash: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Base da lixeira -->
+    <rect x="10" y="14" width="28" height="30" fill="#4a8c0a"/>
+    <rect x="10" y="14" width="28" height="30" fill="#6bb90e"/>
+    <rect x="12" y="16" width="24" height="26" fill="#4a8c0a"/>
+    <!-- Borda 3D -->
+    <rect x="10" y="14" width="2" height="30" fill="#8ed922"/>
+    <rect x="10" y="14" width="28" height="2" fill="#8ed922"/>
+    <rect x="36" y="14" width="2" height="30" fill="#2d5a06"/>
+    <rect x="10" y="42" width="28" height="2" fill="#2d5a06"/>
+    <!-- Tampa -->
+    <rect x="8" y="10" width="32" height="6" fill="#0066cc"/>
+    <rect x="8" y="10" width="32" height="2" fill="#3399ff"/>
+    <rect x="8" y="10" width="2" height="6" fill="#3399ff"/>
+    <rect x="38" y="10" width="2" height="6" fill="#004499"/>
+    <!-- Alça -->
+    <rect x="18" y="4" width="12" height="8" fill="#ffcc00"/>
+    <rect x="18" y="4" width="12" height="2" fill="#ffee66"/>
+    <rect x="20" y="6" width="8" height="4" fill="#0d0d0d"/>
+    <!-- Linhas da lixeira - coloridas -->
+    <rect x="16" y="20" width="3" height="18" fill="#ff6600"/>
+    <rect x="23" y="20" width="3" height="18" fill="#cc0000"/>
+    <rect x="30" y="20" width="3" height="18" fill="#ff6600"/>
+  </svg>`,
+  calendar: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Corpo do calendário -->
+    <rect x="4" y="10" width="40" height="34" fill="#f0f0f0"/>
+    <rect x="4" y="10" width="2" height="34" fill="#fff"/>
+    <rect x="4" y="10" width="40" height="2" fill="#fff"/>
+    <rect x="42" y="10" width="2" height="34" fill="#999"/>
+    <rect x="4" y="42" width="40" height="2" fill="#999"/>
+    <!-- Barra vermelha do topo -->
+    <rect x="4" y="10" width="40" height="10" fill="#cc0000"/>
+    <rect x="4" y="10" width="40" height="2" fill="#ff3333"/>
+    <rect x="4" y="18" width="40" height="2" fill="#990000"/>
+    <!-- Argolas douradas -->
+    <rect x="12" y="4" width="4" height="12" fill="#ffcc00"/>
+    <rect x="12" y="4" width="4" height="2" fill="#ffee66"/>
+    <rect x="32" y="4" width="4" height="12" fill="#ffcc00"/>
+    <rect x="32" y="4" width="4" height="2" fill="#ffee66"/>
+    <!-- Grid de dias colorido -->
+    <rect x="8" y="24" width="6" height="6" fill="#0066cc"/>
+    <rect x="16" y="24" width="6" height="6" fill="#6bb90e"/>
+    <rect x="24" y="24" width="6" height="6" fill="#ff6600"/>
+    <rect x="32" y="24" width="6" height="6" fill="#0066cc"/>
+    <rect x="8" y="32" width="6" height="6" fill="#6bb90e"/>
+    <rect x="16" y="32" width="6" height="6" fill="#ff0000"/>
+    <rect x="24" y="32" width="6" height="6" fill="#ffcc00"/>
+    <rect x="32" y="32" width="6" height="6" fill="#6bb90e"/>
+  </svg>`,
+  folder: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Aba da pasta -->
+    <rect x="4" y="8" width="18" height="6" fill="#ffcc00"/>
+    <rect x="4" y="8" width="18" height="2" fill="#ffee66"/>
+    <polygon points="22,8 26,14 22,14" fill="#ff9900"/>
+    <!-- Corpo da pasta -->
+    <rect x="4" y="14" width="40" height="30" fill="#ffcc00"/>
+    <rect x="4" y="14" width="2" height="30" fill="#ffee66"/>
+    <rect x="4" y="14" width="40" height="2" fill="#ffee66"/>
+    <rect x="42" y="14" width="2" height="30" fill="#cc9900"/>
+    <rect x="4" y="42" width="40" height="2" fill="#cc9900"/>
+    <!-- Detalhe interno -->
+    <rect x="8" y="20" width="32" height="18" fill="#ff9900" fill-opacity="0.3"/>
+    <!-- Linhas de papel dentro -->
+    <rect x="12" y="24" width="20" height="2" fill="#0066cc"/>
+    <rect x="12" y="30" width="16" height="2" fill="#cc0000"/>
+  </svg>`,
+  video: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Corpo da fita/TV -->
+    <rect x="4" y="8" width="40" height="32" fill="#333"/>
+    <rect x="4" y="8" width="40" height="2" fill="#555"/>
+    <rect x="4" y="8" width="2" height="32" fill="#555"/>
+    <rect x="42" y="8" width="2" height="32" fill="#111"/>
+    <rect x="4" y="38" width="40" height="2" fill="#111"/>
+    <!-- Tela -->
+    <rect x="8" y="12" width="32" height="24" fill="#0d0d0d"/>
+    <rect x="10" y="14" width="28" height="20" fill="#0066cc"/>
+    <!-- Botão play vermelho -->
+    <polygon points="18,18 18,30 30,24" fill="#cc0000"/>
+    <polygon points="20,20 20,28 27,24" fill="#ff3333"/>
+    <!-- Detalhes coloridos -->
+    <rect x="8" y="12" width="32" height="2" fill="#ffcc00"/>
+    <circle cx="38" cy="36" r="2" fill="#ff0000"/>
+    <circle cx="33" cy="36" r="2" fill="#6bb90e"/>
+    <circle cx="28" cy="36" r="2" fill="#0066cc"/>
+  </svg>`,
+  audio: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- CD/Disco colorido -->
+    <circle cx="20" cy="24" r="18" fill="#1a1a1a"/>
+    <circle cx="20" cy="24" r="16" fill="#cc0000"/>
+    <circle cx="20" cy="24" r="14" fill="#ff6600"/>
+    <circle cx="20" cy="24" r="10" fill="#ffcc00"/>
+    <circle cx="20" cy="24" r="4" fill="#1a1a1a"/>
+    <circle cx="20" cy="24" r="2" fill="#fff"/>
+    <!-- Reflexo -->
+    <ellipse cx="14" cy="18" rx="4" ry="2" fill="#fff" fill-opacity="0.5"/>
+    <!-- Ondas de som coloridas -->
+    <rect x="36" y="12" width="3" height="24" fill="#0066cc"/>
+    <rect x="36" y="10" width="3" height="2" fill="#3399ff"/>
+    <rect x="40" y="16" width="3" height="16" fill="#6bb90e"/>
+    <rect x="40" y="14" width="3" height="2" fill="#8ed922"/>
+    <rect x="44" y="20" width="2" height="8" fill="#ff00ff"/>
+  </svg>`,
+  file: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Página principal -->
+    <rect x="8" y="4" width="28" height="40" fill="#f0f0f0"/>
+    <rect x="8" y="4" width="2" height="40" fill="#fff"/>
+    <rect x="8" y="4" width="28" height="2" fill="#fff"/>
+    <rect x="34" y="4" width="2" height="40" fill="#ccc"/>
+    <rect x="8" y="42" width="28" height="2" fill="#ccc"/>
+    <!-- Dobra do canto -->
+    <polygon points="28,4 36,4 36,12 28,12" fill="#ddd"/>
+    <polygon points="28,4 36,12 28,12" fill="#bbb"/>
+    <rect x="28" y="4" width="8" height="2" fill="#fff"/>
+    <!-- Linhas de texto verdes -->
+    <rect x="12" y="18" width="20" height="2" fill="#6bb90e"/>
+    <rect x="12" y="24" width="18" height="2" fill="#6bb90e"/>
+    <rect x="12" y="30" width="22" height="2" fill="#6bb90e"/>
+    <rect x="12" y="36" width="14" height="2" fill="#6bb90e"/>
+    <!-- Detalhe -->
+    <rect x="12" y="8" width="12" height="4" fill="#4a8c0a"/>
+  </svg>`,
+  warning: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Triângulo externo -->
+    <polygon points="24,2 46,42 2,42" fill="#ffcc00"/>
+    <polygon points="24,6 42,40 6,40" fill="#ffee00"/>
+    <!-- Borda 3D -->
+    <polygon points="24,2 24,6 6,40 2,42" fill="#ffff66"/>
+    <polygon points="24,2 24,6 42,40 46,42" fill="#cc9900"/>
+    <rect x="2" y="40" width="44" height="2" fill="#996600"/>
+    <!-- Triângulo interno verde -->
+    <polygon points="24,10 38,38 10,38" fill="#6bb90e"/>
+    <!-- Exclamação -->
+    <rect x="22" y="16" width="4" height="12" fill="#0d0d0d"/>
+    <rect x="22" y="18" width="2" height="8" fill="#333"/>
+    <rect x="22" y="32" width="4" height="4" fill="#0d0d0d"/>
+  </svg>`,
+  photo: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Moldura externa colorida -->
+    <rect x="2" y="6" width="44" height="36" fill="#0066cc"/>
+    <rect x="2" y="6" width="44" height="2" fill="#3399ff"/>
+    <rect x="2" y="6" width="2" height="36" fill="#3399ff"/>
+    <rect x="44" y="6" width="2" height="36" fill="#004499"/>
+    <rect x="2" y="40" width="44" height="2" fill="#004499"/>
+    <!-- Área da foto -->
+    <rect x="6" y="10" width="36" height="28" fill="#1a1a1a"/>
+    <rect x="8" y="12" width="32" height="24" fill="#87ceeb"/>
+    <!-- Sol -->
+    <circle cx="34" cy="18" r="4" fill="#ffcc00"/>
+    <circle cx="34" cy="18" r="3" fill="#ffee66"/>
+    <!-- Montanhas coloridas -->
+    <polygon points="8,36 20,20 32,36" fill="#6bb90e"/>
+    <polygon points="10,36 20,22 30,36" fill="#8ed922"/>
+    <polygon points="22,36 32,24 40,36" fill="#ff6600"/>
+    <polygon points="24,36 32,26 38,36" fill="#ffcc00"/>
+  </svg>`
+};
+
+// Fotos da galeria
+const photos = [
+  '/images/foto1.jpeg',
+  '/images/foto2.jpeg',
+  '/images/foto3.jpeg',
+  '/images/foto4.jpeg',
+  '/images/foto5.jpeg',
+  '/images/foto6.jpeg'
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Wallita">
+  <div class="desktop" id="desktop">
+    <!-- Background com capa e logo -->
+    <div class="desktop-bg">
+      <img src="/images/capaalbum.jpeg" alt="Capa do álbum" class="bg-album" />
+      <img src="/images/Wallita.png" alt="Wallita Logo" class="bg-logo" />
+    </div>
+
+    <!-- Ícones do Desktop - espalhados por TODA a tela em cantos EXTREMOS -->
+    <DesktopIcon id="win-trash" label="Lixeira" icon={icons.trash} x={15} y={10} />
+    <DesktopIcon id="win-folder1" label="Fotos" icon={icons.photo} x={15} y={520} />
+    <DesktopIcon id="win-videos" label="Videos" icon={icons.video} x={1280} y={15} />
+    <DesktopIcon id="win-audio" label="Audio" icon={icons.audio} x={1280} y={480} />
+    <DesktopIcon id="win-calendar" label="Agenda" icon={icons.calendar} x={1150} y={260} />
+    <DesktopIcon id="win-folder2" label="Downloads" icon={icons.folder} x={620} y={10} />
+    <DesktopIcon id="win-readme" label="Leia-me.txt" icon={icons.file} x={280} y={520} />
+    <DesktopIcon id="win-folder3" label="Secreto" icon={icons.folder} x={900} y={500} />
+    <DesktopIcon id="win-folder4" label="Stuff" icon={icons.folder} x={480} y={280} />
+
+    <!-- Janela: Lixeira (Spotify) -->
+    <Window id="win-trash" title="Lixeira - Spotify" width={450} height={350} x={150} y={80}>
+      <div class="content-center">
+        <p style="margin-bottom: 16px; text-align: center;">
+          A gente joga fora o que nao presta...<br>
+          mas as vezes a gente RECICLA.
+        </p>
+        <a href="https://open.spotify.com/intl-pt/artist/2KPeAwg1B1P3WROMy9JdQk" target="_blank" class="big-link">
+          OUVIR NO SPOTIFY
+        </a>
+        <iframe
+          style="border-radius:12px; margin-top: 16px;"
+          src="https://open.spotify.com/embed/artist/2KPeAwg1B1P3WROMy9JdQk?utm_source=generator&theme=0"
+          width="100%"
+          height="152"
+          frameBorder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy">
+        </iframe>
+      </div>
+    </Window>
+
+    <!-- Janela: Agenda -->
+    <Window id="win-calendar" title="Agenda - Shows" width={400} height={300} x={200} y={100}>
+      <div class="content-list">
+        <h3 style="margin-bottom: 12px; color: var(--title-bar);">PROXIMOS SHOWS</h3>
+        <div class="show-item">
+          <span class="show-date">EM BREVE</span>
+          <span class="show-info">Fique ligado nas redes!</span>
+        </div>
+        <p style="margin-top: 16px; font-size: 8px; color: #666;">
+          Acompanhe @wallita para novidades
+        </p>
+      </div>
+    </Window>
+
+    <!-- Janela: Vídeos -->
+    <Window id="win-videos" title="Videos" width={560} height={400} x={180} y={60}>
+      <div class="video-container">
+        <iframe
+          width="100%"
+          height="315"
+          src="https://www.youtube.com/embed/OqDDSTlLU7Q"
+          title="Wallita"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </Window>
+
+    <!-- Janela: Áudio -->
+    <Window id="win-audio" title="Audio Player" width={400} height={250} x={250} y={120}>
+      <div class="content-center">
+        <p style="margin-bottom: 12px;">Player de Audio</p>
+        <div class="audio-visual">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+        <p style="margin-top: 16px; font-size: 8px;">
+          Acesse o Spotify para ouvir!
+        </p>
+      </div>
+    </Window>
+
+    <!-- Janela: Fotos - GALERIA -->
+    <Window id="win-folder1" title="Fotos" width={650} height={480} x={120} y={50}>
+      <div class="photo-gallery">
+        {photos.map((photo, i) => (
+          <div class="photo-item">
+            <img src={photo} alt={`Foto ${i + 1}`} loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </Window>
+
+    <!-- Janela: Downloads -->
+    <Window id="win-folder2" title="Downloads" width={350} height={250} x={240} y={110}>
+      <div class="content-center">
+        <p>Nada para baixar ainda...</p>
+        <p style="font-size: 8px; margin-top: 8px; color: #666;">Fique ligado!</p>
+      </div>
+    </Window>
+
+    <!-- Janela: Readme -->
+    <Window id="win-readme" title="Leia-me.txt - Bloco de Notas" width={450} height={340} x={200} y={80}>
+      <div class="notepad-content">
+        <div class="readme-text">
+=======================================
+           W A L L I T A
+=======================================
+
+Somos a Wallita.
+
+Fazemos som.
+
+Segue a gente:
+- Spotify: <a href="https://open.spotify.com/intl-pt/artist/2KPeAwg1B1P3WROMy9JdQk?si=iTGkUKrCRReSXGy8DhOK5A&nd=1&dlsi=0e2e6422f64649b7" target="_blank" class="readme-link">/wallita</a>
+- Youtube: <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="readme-link">@WallitaBand</a>
+- Instagram: <a href="https://www.instagram.com/wallitaband/" target="_blank" class="readme-link">@wallitaband</a>
+- Facebook: <a href="https://www.facebook.com/profile.php?id=61579995254572" target="_blank" class="readme-link">/Wallita</a>
+- Wikipédia: <a href="https://pt.wikipedia.org/wiki/Trepanação" target="_blank" class="readme-link">/clica</a>
+
+Valeu!
+
+=======================================
+        </div>
+      </div>
+    </Window>
+
+    <!-- Janela: Secreto -->
+    <Window id="win-folder3" title="Secreto" width={300} height={200} x={300} y={150}>
+      <div class="content-center">
+        <p style="font-size: 16px;">???</p>
+        <p style="font-size: 8px; margin-top: 12px; color: #666;">Nada aqui... por enquanto</p>
+      </div>
+    </Window>
+
+    <!-- Janela: Stuff -->
+    <Window id="win-folder4" title="Stuff" width={300} height={200} x={350} y={180}>
+      <div class="content-center">
+        <p>Coisas aleatorias</p>
+        <p style="font-size: 8px; margin-top: 8px; color: #666;">Em construcao...</p>
+      </div>
+    </Window>
+
+    <!-- POPUPS DE VÍRUS - posições espalhadas, arrastáveis -->
+    <div class="popup-container" id="popupContainer">
+      <!-- Popup 1 - MÃES SOLTEIRAS -->
+      <div class="virus-popup solteira-popup" id="popup1" data-popup-draggable style="left: 80px; top: 60px; display: none; width: 340px;">
+        <div class="popup-title" data-popup-drag-handle style="background: #ff1493;">
+          <span>ENCONTROS NA SUA AREA!</span>
+          <button class="popup-close" data-popup-close="popup1">X</button>
+        </div>
+        <div class="popup-body solteira-body">
+          <img src="/images/solteira.jpeg" alt="Solteira" class="solteira-img" />
+          <p class="solteira-text">
+            MAES SOLTEIRAS BUSCAM HOMENS QUE OUVEM WALLITA
+          </p>
+          <p class="solteira-subtext">FALE COM UMA AGORA!</p>
+          <button class="solteira-btn blink-btn" id="faleComElaBtn">
+            FALE COM ELA!!
+          </button>
+        </div>
+      </div>
+
+      <!-- Popup 7 - FOGOS DE ARTIFÍCIO -->
+      <div class="virus-popup fireworks-popup" id="popup7" data-popup-draggable style="left: 300px; top: 150px; display: none; width: 450px;">
+        <div class="popup-title" data-popup-drag-handle style="background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff); animation: rainbowBg 1s linear infinite;">
+          <span class="rainbow-text">PARABENS!!!</span>
+          <button class="popup-close" data-popup-close="popup7">X</button>
+        </div>
+        <div class="popup-body fireworks-body">
+          <div class="fireworks-container" id="fireworksContainer"></div>
+          <p class="fireworks-text rainbow-blink">
+            ELAS ESTARAO NO NOSSO PROXIMO SHOW!
+          </p>
+          <p style="font-size: 10px; margin-top: 12px; color: #000;">Fique ligado na agenda!</p>
+          <!-- Áudio de fogos -->
+          <audio id="fogosAudio" src="/sounds/fogos.mpeg" preload="auto"></audio>
+        </div>
+      </div>
+
+      <!-- Popup 2 - YouTube - centro direita -->
+      <div class="virus-popup" id="popup2" data-popup-draggable style="left: 500px; top: 150px; display: none; width: 400px;">
+        <div class="popup-title" data-popup-drag-handle>
+          <span>WALLITA - CLIPE OFICIAL</span>
+          <button class="popup-close" data-popup-close="popup2">X</button>
+        </div>
+        <div class="popup-body" style="padding: 0;">
+          <iframe
+            width="100%"
+            height="225"
+            src="https://www.youtube.com/embed/OqDDSTlLU7Q?autoplay=1&mute=1"
+            title="Wallita"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Popup 3 - canto superior direito -->
+      <div class="virus-popup" id="popup3" data-popup-draggable style="left: 700px; top: 40px; display: none;">
+        <div class="popup-title" data-popup-drag-handle>
+          <span>ERRO CRITICO</span>
+          <button class="popup-close" data-popup-close="popup3">X</button>
+        </div>
+        <div class="popup-body">
+          <div class="popup-icon">{icons.warning}</div>
+          <p>Seu computador esta infectado com MUSICA BOA!</p>
+          <button class="win95-btn popup-btn" data-popup-close="popup3">ACEITAR</button>
+        </div>
+      </div>
+
+      <!-- Popup 4 - centro esquerda -->
+      <div class="virus-popup" id="popup4" data-popup-draggable style="left: 60px; top: 280px; display: none;">
+        <div class="popup-title" data-popup-drag-handle>
+          <span>system32.exe</span>
+          <button class="popup-close" data-popup-close="popup4">X</button>
+        </div>
+        <div class="popup-body">
+          <p>Baixando discografia...</p>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <button class="win95-btn popup-btn" data-popup-close="popup4">CANCELAR</button>
+        </div>
+      </div>
+
+      <!-- Popup 5 - centro -->
+      <div class="virus-popup" id="popup5" data-popup-draggable style="left: 350px; top: 200px; display: none;">
+        <div class="popup-title" data-popup-drag-handle>
+          <span>Wallita.exe</span>
+          <button class="popup-close" data-popup-close="popup5">X</button>
+        </div>
+        <div class="popup-body">
+          <p>SEGUE A GENTE!</p>
+          <a href="https://open.spotify.com/intl-pt/artist/2KPeAwg1B1P3WROMy9JdQk" target="_blank" style="display: block; margin: 8px 0; color: blue;">
+            SPOTIFY
+          </a>
+          <button class="win95-btn popup-btn" data-popup-close="popup5">FECHAR</button>
+        </div>
+      </div>
+
+      <!-- Popup 6 - canto inferior direito -->
+      <div class="virus-popup" id="popup6" data-popup-draggable style="left: 600px; top: 350px; display: none;">
+        <div class="popup-title" data-popup-drag-handle>
+          <span>ATENCAO</span>
+          <button class="popup-close" data-popup-close="popup6">X</button>
+        </div>
+        <div class="popup-body">
+          <div class="popup-icon glitch">{icons.warning}</div>
+          <p>Impossivel ignorar essa banda!</p>
+          <button class="win95-btn popup-btn" data-popup-close="popup6">:(</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <Taskbar />
+</Layout>
+
+<style>
+  .desktop {
+    width: 100vw;
+    height: calc(100vh - 40px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Background com capa e logo */
+  .desktop-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bg-album {
+    position: absolute;
+    right: 60px;
+    bottom: 80px;
+    width: 320px;
+    height: auto;
+    opacity: 0.25;
+    mix-blend-mode: screen;
+    filter: contrast(1.1) brightness(0.8);
+    mask-image: radial-gradient(ellipse 80% 80% at center, black 40%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 80% at center, black 40%, transparent 75%);
+  }
+
+  .bg-logo {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: auto;
+    opacity: 0.06;
+    mix-blend-mode: screen;
+    filter: brightness(2);
+  }
+
+  /* Conteúdo das janelas */
+  .content-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+  }
+
+  .content-list {
+    padding: 8px;
+  }
+
+  .big-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #1DB954;
+    color: white !important;
+    text-decoration: none !important;
+    font-size: 10px;
+  }
+
+  .big-link:hover {
+    background: var(--neon-green) !important;
+    color: #000 !important;
+  }
+
+  .show-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: white;
+    margin-bottom: 4px;
+    border: 1px solid #000;
+  }
+
+  .show-date {
+    font-weight: bold;
+    color: var(--title-bar);
+  }
+
+  .video-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+  }
+
+  .notepad-content {
+    background: white;
+    height: 100%;
+    padding: 8px;
+    overflow: auto;
+  }
+
+  .notepad-content pre {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  .readme-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: #000;
+  }
+
+  .readme-link {
+    color: #0066cc;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .readme-link:hover {
+    color: #0044aa;
+    background: #e0e0ff;
+  }
+
+  /* Photo Gallery */
+  .photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 8px;
+    height: 100%;
+    overflow-y: auto;
+    background: #000;
+  }
+
+  .photo-item {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 2px solid var(--neon-green);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .photo-item:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 0 20px var(--neon-green);
+  }
+
+  .photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: auto;
+  }
+
+  /* Audio visual */
+  .audio-visual {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 60px;
+  }
+
+  .audio-visual .bar {
+    width: 12px;
+    background: var(--neon-green);
+    animation: audioBar 0.5s ease-in-out infinite alternate;
+  }
+
+  .audio-visual .bar:nth-child(1) { height: 20px; animation-delay: 0s; }
+  .audio-visual .bar:nth-child(2) { height: 35px; animation-delay: 0.1s; }
+  .audio-visual .bar:nth-child(3) { height: 50px; animation-delay: 0.2s; }
+  .audio-visual .bar:nth-child(4) { height: 30px; animation-delay: 0.3s; }
+  .audio-visual .bar:nth-child(5) { height: 45px; animation-delay: 0.4s; }
+  .audio-visual .bar:nth-child(6) { height: 25px; animation-delay: 0.5s; }
+  .audio-visual .bar:nth-child(7) { height: 40px; animation-delay: 0.6s; }
+
+  @keyframes audioBar {
+    to { height: 60px; }
+  }
+
+  /* Virus Popups */
+  .popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5000;
+  }
+
+  .virus-popup {
+    position: absolute;
+    width: 280px;
+    background: var(--window-bg);
+    pointer-events: all;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light),
+      inset -2px -2px 0 var(--window-border-dark),
+      inset 2px 2px 0 var(--white),
+      6px 6px 0 rgba(0, 0, 0, 0.5);
+    animation: popupShake 0.3s ease-out;
+  }
+
+  @keyframes popupShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-1deg); }
+    75% { transform: translateX(5px) rotate(1deg); }
+  }
+
+  .popup-title {
+    background: var(--title-bar);
+    color: white;
+    padding: 4px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8px;
+    cursor: move;
+    user-select: none;
+  }
+
+  .popup-close {
+    width: 18px;
+    height: 18px;
+    background: var(--window-bg);
+    border: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    cursor: pointer;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light);
+  }
+
+  .popup-close:hover {
+    background: #c00;
+    color: white;
+  }
+
+  .popup-body {
+    padding: 16px;
+    text-align: center;
+    font-size: 10px;
+  }
+
+  .popup-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+  }
+
+  .popup-btn {
+    margin-top: 12px;
+    padding: 8px 24px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 20px;
+    background: white;
+    border: 2px solid var(--window-border-dark);
+    margin-top: 12px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--title-bar);
+    animation: progressAnim 2s ease-in-out infinite;
+  }
+
+  @keyframes progressAnim {
+    0% { width: 0%; }
+    50% { width: 80%; }
+    100% { width: 100%; }
+  }
+
+  /* Popup Mães Solteiras */
+  .solteira-body {
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    padding: 12px !important;
+  }
+
+  .solteira-img {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border: 3px solid #fff;
+    margin-bottom: 10px;
+  }
+
+  .solteira-text {
+    font-size: 12px !important;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .solteira-subtext {
+    font-size: 10px !important;
+    color: #ffff00;
+    text-shadow: 1px 1px 0 #000;
+    animation: pulse 0.5s ease-in-out infinite;
+  }
+
+  .solteira-btn {
+    margin-top: 12px;
+    padding: 12px 24px;
+    background: #ff0000;
+    color: #fff;
+    border: 3px solid #ffff00;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #000;
+  }
+
+  .blink-btn {
+    animation: blinkBtn 0.3s ease-in-out infinite;
+  }
+
+  @keyframes blinkBtn {
+    0%, 100% {
+      background: #ff0000;
+      transform: scale(1);
+    }
+    50% {
+      background: #ff6600;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ffff00;
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Popup Fogos de Artifício */
+  .fireworks-body {
+    background: #000;
+    min-height: 250px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .firework {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 0;
+    animation: fireworkExplode 1s ease-out forwards;
+  }
+
+  @keyframes fireworkExplode {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+
+  .firework-spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    animation: sparkFly 0.8s ease-out forwards;
+  }
+
+  @keyframes sparkFly {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+  }
+
+  .fireworks-text {
+    position: relative;
+    z-index: 10;
+    font-size: 14px !important;
+    padding: 20px;
+    text-align: center;
+    margin-top: 80px;
+  }
+
+  .rainbow-blink {
+    animation: rainbowText 0.5s linear infinite, blinkText 0.2s ease-in-out infinite;
+  }
+
+  @keyframes rainbowText {
+    0% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+    16% { color: #ff7f00; text-shadow: 0 0 10px #ff7f00; }
+    33% { color: #ffff00; text-shadow: 0 0 10px #ffff00; }
+    50% { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+    66% { color: #0000ff; text-shadow: 0 0 10px #0000ff; }
+    83% { color: #8b00ff; text-shadow: 0 0 10px #8b00ff; }
+    100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+  }
+
+  @keyframes blinkText {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes rainbowBg {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  .rainbow-text {
+    animation: rainbowText 1s linear infinite;
+  }
+</style>
+
+<script>
+  // Sistema de janelas
+  let zIndex = 100;
+  let popupZIndex = 5000;
+  const minimizedWindows: Map<string, { title: string }> = new Map();
+
+  function bringToFront(windowEl: HTMLElement) {
+    zIndex++;
+    windowEl.style.zIndex = String(zIndex);
+    document.querySelectorAll('[data-window]').forEach(w => w.classList.add('inactive'));
+    windowEl.classList.remove('inactive');
+  }
+
+  function bringPopupToFront(popupEl: HTMLElement) {
+    popupZIndex++;
+    popupEl.style.zIndex = String(popupZIndex);
+  }
+
+  function openWindow(id: string) {
+    const win = document.getElementById(id);
+    if (win) {
+      win.style.display = 'flex';
+      bringToFront(win);
+      // Remove da taskbar se estava minimizado
+      removeFromTaskbar(id);
+    }
+  }
+
+  function closeWindow(id: string) {
+    const win = document.getElementById(id);
+    if (win) {
+      win.style.display = 'none';
+      // Remove da taskbar ao fechar (não minimizar)
+      removeFromTaskbar(id);
+    }
+  }
+
+  function minimizeWindow(id: string) {
+    const win = document.getElementById(id);
+    if (win) {
+      const titleEl = win.querySelector('.title-text');
+      const title = titleEl ? titleEl.textContent || id : id;
+      win.style.display = 'none';
+      addToTaskbar(id, title);
+    }
+  }
+
+  function addToTaskbar(id: string, title: string) {
+    const taskbarWindows = document.getElementById('taskbarWindows');
+    if (!taskbarWindows) return;
+
+    // Não adiciona se já existe
+    if (document.getElementById('taskbar-' + id)) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'taskbar-item';
+    btn.id = 'taskbar-' + id;
+    btn.innerHTML = `<span class="taskbar-item-icon">
+      <svg viewBox="0 0 16 16" fill="#6bb90e">
+        <rect x="1" y="3" width="14" height="10" fill="#6bb90e"/>
+        <rect x="1" y="3" width="14" height="3" fill="#000080"/>
+      </svg>
+    </span><span>${title.substring(0, 15)}</span>`;
+
+    btn.addEventListener('click', () => {
+      openWindow(id);
+    });
+
+    taskbarWindows.appendChild(btn);
+    minimizedWindows.set(id, { title });
+  }
+
+  function removeFromTaskbar(id: string) {
+    const btn = document.getElementById('taskbar-' + id);
+    if (btn) {
+      btn.remove();
+      minimizedWindows.delete(id);
+    }
+  }
+
+  // Click nos ícones do desktop
+  document.querySelectorAll('.desktop-icon').forEach(icon => {
+    icon.addEventListener('dblclick', () => {
+      const windowId = (icon as HTMLElement).dataset.windowId;
+      if (windowId) openWindow(windowId);
+    });
+
+    icon.addEventListener('click', (e) => {
+      const windowId = (icon as HTMLElement).dataset.windowId;
+      if (windowId) openWindow(windowId);
+    });
+  });
+
+  // Botões de fechar janela (X) - FECHA completamente
+  document.querySelectorAll('[data-close]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const win = (btn as HTMLElement).closest('[data-window]') as HTMLElement;
+      if (win) {
+        win.style.display = 'none';
+        removeFromTaskbar(win.id);
+      }
+    });
+  });
+
+  // Botões de minimizar janela (_) - vai para taskbar
+  document.querySelectorAll('[data-minimize]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const win = (btn as HTMLElement).closest('[data-window]') as HTMLElement;
+      if (win) {
+        minimizeWindow(win.id);
+      }
+    });
+  });
+
+  // Click na janela traz para frente
+  document.querySelectorAll('[data-window]').forEach(win => {
+    win.addEventListener('mousedown', () => bringToFront(win as HTMLElement));
+  });
+
+  // Drag das janelas normais
+  document.querySelectorAll('[data-draggable]').forEach(titleBar => {
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let windowEl: HTMLElement | null = null;
+
+    titleBar.addEventListener('mousedown', (e: Event) => {
+      const mouseEvent = e as MouseEvent;
+      // Ignora se clicou nos botões
+      if ((mouseEvent.target as HTMLElement).closest('.title-btn')) return;
+
+      isDragging = true;
+      windowEl = (titleBar as HTMLElement).closest('[data-window]') as HTMLElement;
+      if (windowEl) {
+        startX = mouseEvent.clientX - windowEl.offsetLeft;
+        startY = mouseEvent.clientY - windowEl.offsetTop;
+        bringToFront(windowEl);
+      }
+    });
+
+    document.addEventListener('mousemove', (e: MouseEvent) => {
+      if (!isDragging || !windowEl) return;
+      const x = Math.max(0, Math.min(e.clientX - startX, window.innerWidth - 100));
+      const y = Math.max(0, Math.min(e.clientY - startY, window.innerHeight - 100));
+      windowEl.style.left = x + 'px';
+      windowEl.style.top = y + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      windowEl = null;
+    });
+  });
+
+  // Drag dos popups de vírus
+  document.querySelectorAll('[data-popup-drag-handle]').forEach(handle => {
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let popupEl: HTMLElement | null = null;
+
+    handle.addEventListener('mousedown', (e: Event) => {
+      const mouseEvent = e as MouseEvent;
+      // Ignora se clicou no botão fechar
+      if ((mouseEvent.target as HTMLElement).closest('.popup-close')) return;
+
+      isDragging = true;
+      popupEl = (handle as HTMLElement).closest('.virus-popup') as HTMLElement;
+      if (popupEl) {
+        startX = mouseEvent.clientX - popupEl.offsetLeft;
+        startY = mouseEvent.clientY - popupEl.offsetTop;
+        bringPopupToFront(popupEl);
+      }
+      mouseEvent.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e: MouseEvent) => {
+      if (!isDragging || !popupEl) return;
+      const x = Math.max(0, Math.min(e.clientX - startX, window.innerWidth - 100));
+      const y = Math.max(0, Math.min(e.clientY - startY, window.innerHeight - 80));
+      popupEl.style.left = x + 'px';
+      popupEl.style.top = y + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      popupEl = null;
+    });
+  });
+
+  // Click no popup traz para frente
+  document.querySelectorAll('.virus-popup').forEach(popup => {
+    popup.addEventListener('mousedown', () => bringPopupToFront(popup as HTMLElement));
+  });
+
+  // Fechar popups de vírus
+  document.querySelectorAll('[data-popup-close]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const popupId = (btn as HTMLElement).dataset.popupClose;
+      if (popupId) {
+        const popup = document.getElementById(popupId);
+        if (popup) popup.style.display = 'none';
+      }
+    });
+  });
+
+  // Animação de vírus na abertura - posições fixas espalhadas
+  function startVirusAnimation() {
+    const popups = [
+      { id: 'popup1', x: 80, y: 60 },
+      { id: 'popup3', x: 650, y: 40 },
+      { id: 'popup4', x: 60, y: 280 },
+      { id: 'popup5', x: 350, y: 200 },
+      { id: 'popup6', x: 550, y: 380 },
+      { id: 'popup2', x: 450, y: 120 }
+    ];
+
+    let delay = 0; // Primeiro popup instantâneo
+    popups.forEach((popupData) => {
+      setTimeout(() => {
+        const popup = document.getElementById(popupData.id);
+        if (popup) {
+          // Ajusta posição baseada no tamanho da tela
+          const maxX = Math.max(100, window.innerWidth - 350);
+          const maxY = Math.max(100, window.innerHeight - 300);
+          popup.style.left = Math.min(popupData.x, maxX) + 'px';
+          popup.style.top = Math.min(popupData.y, maxY) + 'px';
+          popup.style.display = 'block';
+          bringPopupToFront(popup);
+        }
+      }, delay);
+      delay += 250; // 250ms entre cada popup
+    });
+  }
+
+  // Iniciar vírus quase instantaneamente
+  window.addEventListener('load', () => {
+    setTimeout(startVirusAnimation, 100);
+  });
+
+  // Botão "Fale com ela" - abre popup de fogos
+  const faleComElaBtn = document.getElementById('faleComElaBtn');
+  const fogosAudio = document.getElementById('fogosAudio') as HTMLAudioElement;
+
+  if (faleComElaBtn) {
+    faleComElaBtn.addEventListener('click', () => {
+      const popup7 = document.getElementById('popup7');
+      if (popup7) {
+        popup7.style.display = 'block';
+        bringPopupToFront(popup7);
+        startFireworks();
+        // Tocar áudio de fogos
+        if (fogosAudio) {
+          fogosAudio.currentTime = 0;
+          fogosAudio.loop = true;
+          fogosAudio.play().catch(() => {
+            // Ignora erro se autoplay bloqueado
+          });
+        }
+      }
+    });
+  }
+
+  // Parar áudio quando fechar popup7
+  const popup7CloseBtn = document.querySelector('[data-popup-close="popup7"]');
+  if (popup7CloseBtn) {
+    popup7CloseBtn.addEventListener('click', () => {
+      if (fogosAudio) {
+        fogosAudio.pause();
+        fogosAudio.currentTime = 0;
+      }
+    });
+  }
+
+  // Sistema de fogos de artifício pixelados
+  let fireworksRunning = false;
+
+  function startFireworks() {
+    const container = document.getElementById('fireworksContainer');
+    if (!container || fireworksRunning) return;
+
+    fireworksRunning = true;
+    container.innerHTML = ''; // Limpa fogos anteriores
+
+    const colors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ffffff', '#ff1493', '#7fff00'];
+
+    function createFirework() {
+      const containerWidth = container.offsetWidth || 400;
+      const containerHeight = container.offsetHeight || 200;
+      const x = Math.random() * (containerWidth - 50) + 25;
+      const y = Math.random() * (containerHeight - 50) + 25;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+
+      // Centro do fogo - explosão principal
+      const center = document.createElement('div');
+      center.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        width: 8px;
+        height: 8px;
+        background: ${color};
+        box-shadow: 0 0 15px ${color}, 0 0 30px ${color};
+        animation: fireworkPop 0.5s ease-out forwards;
+      `;
+      container.appendChild(center);
+
+      // Partículas que explodem em todas as direções
+      for (let i = 0; i < 12; i++) {
+        const spark = document.createElement('div');
+        const angle = (i / 12) * Math.PI * 2;
+        const distance = 30 + Math.random() * 40;
+        const endX = Math.cos(angle) * distance;
+        const endY = Math.sin(angle) * distance;
+
+        spark.style.cssText = `
+          position: absolute;
+          left: ${x}px;
+          top: ${y}px;
+          width: 6px;
+          height: 6px;
+          background: ${color};
+          box-shadow: 0 0 8px ${color};
+          animation: sparkExplode 0.8s ease-out forwards;
+          --end-x: ${endX}px;
+          --end-y: ${endY}px;
+        `;
+        container.appendChild(spark);
+
+        // Remove depois da animação
+        setTimeout(() => spark.remove(), 800);
+      }
+
+      // Remove centro depois da animação
+      setTimeout(() => center.remove(), 500);
+    }
+
+    // Lançar vários fogos rapidamente
+    let count = 0;
+    const maxFireworks = 60;
+
+    const fireworkInterval = setInterval(() => {
+      createFirework();
+      // Às vezes cria 2 de uma vez
+      if (Math.random() > 0.5) createFirework();
+      count++;
+
+      if (count >= maxFireworks) {
+        clearInterval(fireworkInterval);
+        // Reinicia depois de uma pausa
+        setTimeout(() => {
+          const popup7 = document.getElementById('popup7');
+          if (popup7 && popup7.style.display !== 'none') {
+            fireworksRunning = false;
+            startFireworks();
+          } else {
+            fireworksRunning = false;
+          }
+        }, 2000);
+      }
+    }, 100);
+  }
+
+  // Adiciona estilos de animação dinamicamente
+  const fireworkStyles = document.createElement('style');
+  fireworkStyles.textContent = `
+    @keyframes fireworkPop {
+      0% { transform: scale(0); opacity: 1; }
+      50% { transform: scale(3); opacity: 1; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+    @keyframes sparkExplode {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--end-x), var(--end-y)) scale(0); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(fireworkStyles);
+</script>

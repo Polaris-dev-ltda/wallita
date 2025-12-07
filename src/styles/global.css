@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  --bg-dark: #0d0d0d;
+  --neon-green: #6bb90e;
+  --white: #f0f0f0;
+  --window-bg: #c0c0c0;
+  --window-border-light: #dfdfdf;
+  --window-border-dark: #808080;
+  --window-border-darker: #404040;
+  --title-bar: #000080;
+  --title-bar-inactive: #808080;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Press Start 2P', cursive;
+  background-color: var(--bg-dark);
+  color: var(--neon-green);
+  font-size: 12px;
+  line-height: 1.6;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M0 0 L0 14 L4 10 L7 16 L9 15 L6 9 L11 9 Z' fill='%236bb90e' stroke='%230d0d0d'/%3E%3C/svg%3E"), auto;
+}
+
+/* Windows 95 style button */
+.win95-btn {
+  background: var(--window-bg);
+  border: none;
+  padding: 4px 8px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  cursor: pointer;
+  box-shadow:
+    inset -1px -1px 0 var(--window-border-darker),
+    inset 1px 1px 0 var(--window-border-light),
+    inset -2px -2px 0 var(--window-border-dark),
+    inset 2px 2px 0 var(--white);
+}
+
+.win95-btn:active {
+  box-shadow:
+    inset 1px 1px 0 var(--window-border-darker),
+    inset -1px -1px 0 var(--window-border-light),
+    inset 2px 2px 0 var(--window-border-dark),
+    inset -2px -2px 0 var(--white);
+}
+
+/* Scrollbar estilo Windows 95 */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: repeating-conic-gradient(var(--window-bg) 0% 25%, var(--white) 0% 50%) 50% / 2px 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--window-bg);
+  box-shadow:
+    inset -1px -1px 0 var(--window-border-darker),
+    inset 1px 1px 0 var(--window-border-light),
+    inset -2px -2px 0 var(--window-border-dark),
+    inset 2px 2px 0 var(--white);
+}
+
+/* Efeito de dither */
+.dither-bg {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVQIW2NkYGD4z8DAwMgAABJYAQcpZ8IEAAAAASUVORK5CYII=");
+}
+
+/* Scanlines effect */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  z-index: 10000;
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.glitch {
+  animation: glitch 0.3s infinite;
+}
+
+/* Pixel border */
+.pixel-border {
+  box-shadow:
+    0 -4px 0 0 var(--neon-green),
+    0 4px 0 0 var(--neon-green),
+    -4px 0 0 0 var(--neon-green),
+    4px 0 0 0 var(--neon-green);
+}

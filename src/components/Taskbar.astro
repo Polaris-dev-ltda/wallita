@@ -1,0 +1,462 @@
+---
+// Lista de imagens disponíveis na pasta public/images
+const availableWallpapers = [
+  { name: 'Capa do Álbum', src: '/images/capaalbum.jpeg' },
+  { name: 'Foto 1', src: '/images/foto1.jpeg' },
+  { name: 'Foto 2', src: '/images/foto2.jpeg' },
+  { name: 'Foto 3', src: '/images/foto3.jpeg' },
+  { name: 'Foto 4', src: '/images/foto4.jpeg' },
+  { name: 'Foto 5', src: '/images/foto5.jpeg' },
+  { name: 'Foto 6', src: '/images/foto6.jpeg' },
+  { name: 'Logo Wallita', src: '/images/Wallita.png' },
+  { name: 'Solteira', src: '/images/solteira.jpeg' },
+  { name: 'Solteira 2', src: '/images/solteira2.jpeg' },
+];
+---
+
+<div class="taskbar">
+  <button class="start-btn" id="startBtn">
+    <span class="start-icon">W</span>
+    <span class="start-text">Wallita</span>
+  </button>
+
+  <div class="taskbar-windows" id="taskbarWindows">
+    <!-- Janelas minimizadas aparecem aqui via JS -->
+  </div>
+
+  <!-- Botão Wallpaper -->
+  <button class="wallpaper-btn" id="wallpaperBtn" title="Trocar Wallpaper">
+    <svg viewBox="0 0 20 20" width="16" height="16">
+      <rect x="1" y="1" width="18" height="18" fill="#6bb90e" stroke="#4a8c0a" stroke-width="1"/>
+      <rect x="3" y="3" width="14" height="10" fill="#0d0d0d"/>
+      <circle cx="13" cy="6" r="2" fill="#ffcc00"/>
+      <polygon points="3,13 8,8 12,12 15,9 17,11 17,13" fill="#4a8c0a"/>
+    </svg>
+    <span>Wallpaper</span>
+  </button>
+  <input type="file" id="wallpaperInput" accept="image/*" style="display: none;" />
+
+  <!-- Menu de Wallpapers -->
+  <div class="wallpaper-menu" id="wallpaperMenu" style="display: none;">
+    <div class="wallpaper-menu-title">
+      <span>Escolher Wallpaper</span>
+      <button class="menu-close-btn" id="menuCloseBtn">X</button>
+    </div>
+    <div class="wallpaper-menu-content">
+      <!-- 1. Opção Padrão (primeiro) -->
+      <div class="wallpaper-option" data-wallpaper="default">
+        <div class="wallpaper-thumb default-thumb">
+          <svg viewBox="0 0 40 30" width="100%" height="100%">
+            <rect width="40" height="30" fill="#0d0d0d"/>
+            <text x="20" y="18" text-anchor="middle" fill="#6bb90e" font-size="6" font-family="monospace">PADRÃO</text>
+          </svg>
+        </div>
+        <span class="wallpaper-name">Padrão</span>
+      </div>
+
+      <!-- 2. Opção Customizar (segundo) -->
+      <div class="wallpaper-option" id="customWallpaperOption">
+        <div class="wallpaper-thumb custom-thumb">
+          <svg viewBox="0 0 40 30" width="100%" height="100%">
+            <rect width="40" height="30" fill="#4a8c0a" stroke="#6bb90e" stroke-width="1"/>
+            <text x="20" y="12" text-anchor="middle" fill="#fff" font-size="5" font-family="monospace">ESCOLHER</text>
+            <text x="20" y="20" text-anchor="middle" fill="#fff" font-size="5" font-family="monospace">ARQUIVO</text>
+            <text x="20" y="26" text-anchor="middle" fill="#ffcc00" font-size="6">+</text>
+          </svg>
+        </div>
+        <span class="wallpaper-name">Customizar...</span>
+      </div>
+
+      <!-- 3. Thumbnails das imagens disponíveis (depois) -->
+      {availableWallpapers.map((wp) => (
+        <div class="wallpaper-option" data-wallpaper={wp.src}>
+          <img class="wallpaper-thumb" src={wp.src} alt={wp.name} loading="lazy" />
+          <span class="wallpaper-name">{wp.name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="taskbar-tray">
+    <span class="tray-time" id="trayTime">00:00</span>
+  </div>
+</div>
+
+<style>
+  .taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: var(--window-bg);
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    gap: 4px;
+    z-index: 9999;
+    box-shadow:
+      inset 0 1px 0 var(--window-border-light),
+      inset 0 2px 0 var(--white);
+  }
+
+  .start-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--window-bg);
+    border: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    cursor: pointer;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light),
+      inset -2px -2px 0 var(--window-border-dark),
+      inset 2px 2px 0 var(--white);
+  }
+
+  .start-btn:active {
+    box-shadow:
+      inset 1px 1px 0 var(--window-border-darker),
+      inset -1px -1px 0 var(--window-border-light),
+      inset 2px 2px 0 var(--window-border-dark),
+      inset -2px -2px 0 var(--white);
+  }
+
+  .start-icon {
+    width: 20px;
+    height: 20px;
+    background: var(--neon-green);
+    color: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  .start-text {
+    color: #000;
+  }
+
+  .taskbar-windows {
+    flex: 1;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 2px 0;
+  }
+
+  .taskbar-windows::-webkit-scrollbar {
+    height: 0;
+  }
+
+  .wallpaper-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--window-bg);
+    border: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 7px;
+    cursor: pointer;
+    color: #000;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light),
+      inset -2px -2px 0 var(--window-border-dark),
+      inset 2px 2px 0 var(--white);
+  }
+
+  .wallpaper-btn:hover {
+    background: #d4d4d4;
+  }
+
+  .wallpaper-btn:active {
+    box-shadow:
+      inset 1px 1px 0 var(--window-border-darker),
+      inset -1px -1px 0 var(--window-border-light),
+      inset 2px 2px 0 var(--window-border-dark),
+      inset -2px -2px 0 var(--white);
+  }
+
+  /* Menu de Wallpapers estilo Windows 95 */
+  .wallpaper-menu {
+    position: fixed;
+    bottom: 50px;
+    right: 80px;
+    width: 380px;
+    max-height: 400px;
+    background: var(--window-bg);
+    z-index: 10000;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light),
+      inset -2px -2px 0 var(--window-border-dark),
+      inset 2px 2px 0 var(--white),
+      4px 4px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .wallpaper-menu-title {
+    background: #000080;
+    color: white;
+    padding: 4px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+  }
+
+  .menu-close-btn {
+    width: 18px;
+    height: 18px;
+    background: var(--window-bg);
+    border: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light);
+  }
+
+  .menu-close-btn:hover {
+    background: #c00;
+    color: white;
+  }
+
+  .wallpaper-menu-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 12px;
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .wallpaper-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    cursor: pointer;
+    background: var(--window-bg);
+    border: 2px solid transparent;
+  }
+
+  .wallpaper-option:hover {
+    background: #000080;
+    border-color: #000080;
+  }
+
+  .wallpaper-option:hover .wallpaper-name {
+    color: white;
+  }
+
+  .wallpaper-thumb {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border: 2px solid var(--window-border-dark);
+    background: #000;
+  }
+
+  .default-thumb, .custom-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d0d0d;
+  }
+
+  .wallpaper-name {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 6px;
+    color: #000;
+    text-align: center;
+    word-break: break-word;
+    max-width: 100px;
+  }
+
+  .taskbar-tray {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    background: var(--window-bg);
+    box-shadow:
+      inset 1px 1px 0 var(--window-border-dark),
+      inset -1px -1px 0 var(--window-border-light);
+  }
+
+  .tray-time {
+    font-size: 8px;
+    color: #000;
+  }
+
+  /* Estilo para botões de janela na taskbar */
+  :global(.taskbar-item) {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    background: var(--window-bg);
+    border: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 7px;
+    cursor: pointer;
+    white-space: nowrap;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow:
+      inset 1px 1px 0 var(--window-border-darker),
+      inset -1px -1px 0 var(--window-border-light),
+      inset 2px 2px 0 var(--window-border-dark),
+      inset -2px -2px 0 var(--white);
+  }
+
+  :global(.taskbar-item:hover) {
+    background: #d4d4d4;
+  }
+
+  :global(.taskbar-item-icon) {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  :global(.taskbar-item-icon svg) {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  function updateTime() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const el = document.getElementById('trayTime');
+    if (el) el.textContent = time;
+  }
+
+  updateTime();
+  setInterval(updateTime, 1000);
+
+  // Elementos
+  const wallpaperBtn = document.getElementById('wallpaperBtn');
+  const wallpaperMenu = document.getElementById('wallpaperMenu');
+  const menuCloseBtn = document.getElementById('menuCloseBtn');
+  const wallpaperInput = document.getElementById('wallpaperInput') as HTMLInputElement;
+  const customWallpaperOption = document.getElementById('customWallpaperOption');
+
+  // Toggle menu
+  wallpaperBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (wallpaperMenu) {
+      wallpaperMenu.style.display = wallpaperMenu.style.display === 'none' ? 'block' : 'none';
+    }
+  });
+
+  // Fechar menu
+  menuCloseBtn?.addEventListener('click', () => {
+    if (wallpaperMenu) wallpaperMenu.style.display = 'none';
+  });
+
+  // Fechar ao clicar fora
+  document.addEventListener('click', (e) => {
+    if (wallpaperMenu && !wallpaperMenu.contains(e.target as Node) && e.target !== wallpaperBtn) {
+      wallpaperMenu.style.display = 'none';
+    }
+  });
+
+  // Clique nas opções de wallpaper
+  document.querySelectorAll('.wallpaper-option[data-wallpaper]').forEach(option => {
+    option.addEventListener('click', () => {
+      const wallpaperSrc = (option as HTMLElement).dataset.wallpaper;
+      if (wallpaperSrc === 'default') {
+        removeCustomWallpaper();
+      } else if (wallpaperSrc) {
+        applyWallpaper(wallpaperSrc);
+      }
+      if (wallpaperMenu) wallpaperMenu.style.display = 'none';
+    });
+  });
+
+  // Opção customizar
+  customWallpaperOption?.addEventListener('click', () => {
+    wallpaperInput?.click();
+  });
+
+  // Input de arquivo
+  wallpaperInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string;
+        applyWallpaper(dataUrl);
+        if (wallpaperMenu) wallpaperMenu.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function applyWallpaper(src: string) {
+    const desktop = document.getElementById('desktop');
+    if (desktop) {
+      let customBg = document.getElementById('customWallpaper');
+      if (!customBg) {
+        customBg = document.createElement('div');
+        customBg.id = 'customWallpaper';
+        customBg.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          background-size: cover;
+          background-position: center;
+          pointer-events: none;
+        `;
+        desktop.insertBefore(customBg, desktop.firstChild);
+      }
+      customBg.style.backgroundImage = `url(${src})`;
+    }
+  }
+
+  function removeCustomWallpaper() {
+    const customBg = document.getElementById('customWallpaper');
+    if (customBg) {
+      customBg.remove();
+    }
+  }
+
+  // Drag and drop support no desktop
+  const desktop = document.getElementById('desktop');
+  desktop?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
+
+  desktop?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer?.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string;
+        applyWallpaper(dataUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
