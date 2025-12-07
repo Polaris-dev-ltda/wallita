@@ -1766,14 +1766,18 @@ Valeu!
   const GOOGLE_DOC_ID = '1hita8ioompImCbzXpYqT2eZjvSYgeoTe1VTNUjaKIs8';
   const GOOGLE_DOC_EXPORT_URL = `https://docs.google.com/document/d/${GOOGLE_DOC_ID}/export?format=txt`;
 
-  // Dados estáticos de fallback
-  const fallbackShows = [
-    { date: '13/12', city: 'CASCAVEL', venue: 'ADEGA NOSTRAVAMOS' },
-    { date: '19/12', city: 'CASCAVEL', venue: 'ADEGA NOSTRAVAMOS' },
-    { date: '20/12', city: 'A DEFINIR', venue: 'Fique ligado!' }
+  // Lista de proxies CORS para tentar (em ordem)
+  const CORS_PROXIES = [
+    (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
   ];
 
-  let agendaLoaded = false;
+  // Timeout para requisições (10 segundos)
+  const FETCH_TIMEOUT = 10000;
+
+  // Flag para evitar múltiplas requisições simultâneas
+  let isLoadingAgenda = false;
 
   // Parsear o conteúdo do Google Docs
   function parseAgendaContent(text: string) {
@@ -1861,46 +1865,112 @@ Valeu!
     container.innerHTML = html;
   }
 
-  // Carregar agenda do Google Docs
-  async function loadAgenda() {
-    if (agendaLoaded) return;
-
+  // Mostrar estado de loading
+  function showAgendaLoading() {
     const container = document.getElementById('agendaContent');
     if (!container) return;
+    container.innerHTML = `
+      <div class="agenda-loading">
+        <span class="loading-text">Carregando agenda...</span>
+        <div class="loading-bar"><div class="loading-fill"></div></div>
+      </div>
+    `;
+  }
+
+  // Mostrar erro na agenda
+  function showAgendaError() {
+    const container = document.getElementById('agendaContent');
+    if (!container) return;
+    container.innerHTML = `
+      <div class="agenda-error">
+        <span style="font-size: 24px; display: block; margin-bottom: 12px;">⚠️</span>
+        <p>Não foi possível carregar a agenda.</p>
+        <p style="margin-top: 8px; color: #666;">Siga <a href="https://www.instagram.com/wallitaband/" target="_blank" style="color: #000080;">@wallitaband</a> para novidades!</p>
+      </div>
+    `;
+  }
+
+  // Fetch com timeout
+  function fetchWithTimeout(url: string, timeout: number): Promise<Response> {
+    return Promise.race([
+      fetch(url, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+          'Accept': 'text/plain',
+          'Cache-Control': 'no-cache'
+        }
+      }),
+      new Promise<Response>((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout')), timeout)
+      )
+    ]);
+  }
+
+  // Tentar carregar com múltiplos proxies
+  async function tryLoadWithProxies(): Promise<string | null> {
+    // Adiciona timestamp para cache busting
+    const urlWithTimestamp = `${GOOGLE_DOC_EXPORT_URL}&t=${Date.now()}`;
+
+    for (const proxyFn of CORS_PROXIES) {
+      try {
+        const proxyUrl = proxyFn(urlWithTimestamp);
+        console.log('Tentando proxy:', proxyUrl.substring(0, 50) + '...');
+
+        const response = await fetchWithTimeout(proxyUrl, FETCH_TIMEOUT);
+
+        if (response.ok) {
+          const text = await response.text();
+          if (text && text.length > 0) {
+            console.log('Sucesso! Dados carregados.');
+            return text;
+          }
+        }
+      } catch (error) {
+        console.warn('Proxy falhou:', error);
+        // Continua para o próximo proxy
+      }
+    }
+
+    return null;
+  }
+
+  // Carregar agenda do Google Docs - SEMPRE busca dados novos
+  async function loadAgenda() {
+    // Evita múltiplas requisições simultâneas
+    if (isLoadingAgenda) return;
+    isLoadingAgenda = true;
+
+    const container = document.getElementById('agendaContent');
+    if (!container) {
+      isLoadingAgenda = false;
+      return;
+    }
+
+    // Mostra loading
+    showAgendaLoading();
 
     try {
-      // Usa um proxy CORS ou tenta direto
-      // Como o Google Docs pode bloquear CORS, vamos tentar com um proxy público
-      const corsProxy = 'https://api.allorigins.win/raw?url=';
-      const url = corsProxy + encodeURIComponent(GOOGLE_DOC_EXPORT_URL);
+      const text = await tryLoadWithProxies();
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Accept': 'text/plain'
+      if (text) {
+        const shows = parseAgendaContent(text);
+
+        if (shows.length > 0) {
+          renderAgenda(shows);
+        } else {
+          // Documento vazio ou sem shows válidos
+          showAgendaError();
         }
-      });
-
-      if (!response.ok) {
-        throw new Error('Falha ao carregar agenda');
-      }
-
-      const text = await response.text();
-      const shows = parseAgendaContent(text);
-
-      if (shows.length > 0) {
-        renderAgenda(shows);
-        agendaLoaded = true;
       } else {
-        // Se parseou mas não encontrou shows, usa fallback
-        renderAgenda(fallbackShows);
-        agendaLoaded = true;
+        // Todos os proxies falharam
+        showAgendaError();
       }
     } catch (error) {
-      console.warn('Erro ao carregar agenda do Google Docs, usando fallback:', error);
-      // Usa dados estáticos como fallback
-      renderAgenda(fallbackShows);
-      agendaLoaded = true;
+      console.error('Erro ao carregar agenda:', error);
+      showAgendaError();
+    } finally {
+      isLoadingAgenda = false;
     }
   }
 
@@ -1912,7 +1982,8 @@ Valeu!
       for (const mutation of mutations) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
           const display = (calendarWindow as HTMLElement).style.display;
-          if (display !== 'none' && !agendaLoaded) {
+          if (display !== 'none' && display !== '') {
+            // Sempre carrega quando abrir a janela
             loadAgenda();
           }
         }
@@ -1920,14 +1991,9 @@ Valeu!
     });
 
     observer.observe(calendarWindow, { attributes: true });
-
-    // Também carrega se a janela já estiver visível no load
-    if (calendarWindow.style.display !== 'none') {
-      loadAgenda();
-    }
   }
 
-  // Também carrega quando clicar no ícone da agenda
+  // Carrega quando clicar no ícone da agenda
   const calendarIcon = document.querySelector('[data-window-id="win-calendar"]');
   if (calendarIcon) {
     calendarIcon.addEventListener('click', () => {
