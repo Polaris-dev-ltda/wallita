@@ -218,16 +218,22 @@ const photos = [
     </Window>
 
     <!-- Janela: Agenda -->
-    <Window id="win-calendar" title="Agenda - Shows" width={400} height={300} x={200} y={100}>
-      <div class="content-list">
-        <h3 style="margin-bottom: 12px; color: var(--title-bar);">PROXIMOS SHOWS</h3>
-        <div class="show-item">
-          <span class="show-date">EM BREVE</span>
-          <span class="show-info">Fique ligado nas redes!</span>
+    <Window id="win-calendar" title="Agenda - Shows" width={420} height={340} x={200} y={100}>
+      <div class="agenda-container" id="agendaContainer">
+        <div class="agenda-header">
+          <span class="agenda-icon">📅</span>
+          <span class="agenda-title">PROXIMOS SHOWS</span>
         </div>
-        <p style="margin-top: 16px; font-size: 8px; color: #666;">
-          Acompanhe @wallita para novidades
-        </p>
+        <div class="agenda-divider"></div>
+        <div class="agenda-content" id="agendaContent">
+          <div class="agenda-loading">
+            <span class="loading-text">Carregando agenda...</span>
+            <div class="loading-bar"><div class="loading-fill"></div></div>
+          </div>
+        </div>
+        <div class="agenda-footer">
+          <span>Acompanhe @wallitaband para novidades</span>
+        </div>
       </div>
     </Window>
 
@@ -541,6 +547,164 @@ Valeu!
   .show-date {
     font-weight: bold;
     color: var(--title-bar);
+  }
+
+  /* Agenda - Estilo Windows 95 */
+  .agenda-container {
+    height: 100%;
+    background: #c0c0c0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Press Start 2P', monospace;
+  }
+
+  .agenda-header {
+    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+    color: #fff;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .agenda-icon {
+    font-size: 14px;
+  }
+
+  .agenda-title {
+    font-size: 10px;
+    text-shadow: 1px 1px 0 #000;
+  }
+
+  .agenda-divider {
+    height: 3px;
+    background: linear-gradient(90deg, #ffcc00, #ff6600, #cc0000);
+  }
+
+  .agenda-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    background: #fff;
+    border: 2px inset #808080;
+    margin: 8px;
+  }
+
+  .agenda-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 12px;
+  }
+
+  .loading-text {
+    font-size: 8px;
+    color: #000080;
+  }
+
+  .loading-bar {
+    width: 150px;
+    height: 16px;
+    background: #fff;
+    border: 2px inset #808080;
+    overflow: hidden;
+  }
+
+  .loading-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #000080 25%, #0000aa 25%, #0000aa 50%, #000080 50%, #000080 75%, #0000aa 75%);
+    background-size: 20px 100%;
+    animation: loadingAnim 0.5s linear infinite;
+  }
+
+  @keyframes loadingAnim {
+    0% { transform: translateX(-20px); width: 100%; }
+    100% { transform: translateX(0); width: 100%; }
+  }
+
+  .agenda-show {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px;
+    margin-bottom: 6px;
+    background: #f0f0f0;
+    border: 2px outset #fff;
+    gap: 10px;
+  }
+
+  .agenda-show:hover {
+    background: #e0e0ff;
+    border-color: #000080;
+  }
+
+  .show-date-box {
+    min-width: 50px;
+    text-align: center;
+    background: #cc0000;
+    color: #fff;
+    padding: 4px 6px;
+    border: 2px outset #ff6666;
+  }
+
+  .show-date-day {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+  }
+
+  .show-date-month {
+    font-size: 6px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .show-info-box {
+    flex: 1;
+    font-size: 8px;
+    line-height: 1.6;
+  }
+
+  .show-city {
+    color: #000080;
+    font-weight: bold;
+    display: block;
+  }
+
+  .show-venue {
+    color: #666;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .agenda-footer {
+    padding: 6px 12px;
+    background: #c0c0c0;
+    font-size: 6px;
+    color: #666;
+    text-align: center;
+    border-top: 2px groove #fff;
+  }
+
+  .agenda-error {
+    text-align: center;
+    padding: 20px;
+    color: #cc0000;
+    font-size: 8px;
+  }
+
+  .agenda-empty {
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 8px;
+    color: #666;
+  }
+
+  .agenda-empty-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
   }
 
   .video-container {
@@ -1002,6 +1166,60 @@ Valeu!
 
     .readme-link {
       font-size: 6px;
+    }
+
+    /* Agenda mobile */
+    .agenda-header {
+      padding: 6px 8px;
+    }
+
+    .agenda-icon {
+      font-size: 12px;
+    }
+
+    .agenda-title {
+      font-size: 8px;
+    }
+
+    .agenda-content {
+      padding: 6px;
+      margin: 6px;
+    }
+
+    .agenda-show {
+      padding: 6px;
+      gap: 8px;
+    }
+
+    .show-date-box {
+      min-width: 40px;
+      padding: 3px 5px;
+    }
+
+    .show-date-day {
+      font-size: 12px;
+    }
+
+    .show-date-month {
+      font-size: 5px;
+    }
+
+    .show-info-box {
+      font-size: 7px;
+    }
+
+    .agenda-footer {
+      font-size: 5px;
+      padding: 4px 8px;
+    }
+
+    .loading-text {
+      font-size: 6px;
+    }
+
+    .loading-bar {
+      width: 100px;
+      height: 12px;
     }
   }
 </style>
@@ -1543,4 +1761,180 @@ Valeu!
     }
   `;
   document.head.appendChild(fireworkStyles);
+
+  // ========== SISTEMA DE AGENDA COM GOOGLE DOCS ==========
+  const GOOGLE_DOC_ID = '1hita8ioompImCbzXpYqT2eZjvSYgeoTe1VTNUjaKIs8';
+  const GOOGLE_DOC_EXPORT_URL = `https://docs.google.com/document/d/${GOOGLE_DOC_ID}/export?format=txt`;
+
+  // Dados estáticos de fallback
+  const fallbackShows = [
+    { date: '13/12', city: 'CASCAVEL', venue: 'ADEGA NOSTRAVAMOS' },
+    { date: '19/12', city: 'CASCAVEL', venue: 'ADEGA NOSTRAVAMOS' },
+    { date: '20/12', city: 'A DEFINIR', venue: 'Fique ligado!' }
+  ];
+
+  let agendaLoaded = false;
+
+  // Parsear o conteúdo do Google Docs
+  function parseAgendaContent(text: string) {
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    const shows: Array<{date: string, city: string, venue: string}> = [];
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      // Ignora linhas de cabeçalho ou vazias
+      if (!trimmed || trimmed.toLowerCase().includes('agenda') || trimmed.toLowerCase().includes('shows')) {
+        continue;
+      }
+
+      // Tenta parsear no formato: "DD/MM - CIDADE - LOCAL" ou "DD/MM - CIDADE LOCAL"
+      // Também aceita: "DD/MM CIDADE - LOCAL" ou variações
+      const dateMatch = trimmed.match(/^(\d{1,2}\/\d{1,2})/);
+      if (dateMatch) {
+        const date = dateMatch[1];
+        let rest = trimmed.substring(dateMatch[0].length).trim();
+
+        // Remove traço inicial se houver
+        if (rest.startsWith('-')) {
+          rest = rest.substring(1).trim();
+        }
+
+        // Tenta dividir por " - " para separar cidade e local
+        const parts = rest.split(/\s*-\s*/);
+        if (parts.length >= 2) {
+          shows.push({
+            date: date,
+            city: parts[0].toUpperCase(),
+            venue: parts.slice(1).join(' - ').toUpperCase()
+          });
+        } else if (parts.length === 1 && parts[0]) {
+          // Se não tem separador, assume tudo como local/info
+          shows.push({
+            date: date,
+            city: parts[0].toUpperCase(),
+            venue: ''
+          });
+        }
+      }
+    }
+
+    return shows;
+  }
+
+  // Renderizar os shows na agenda
+  function renderAgenda(shows: Array<{date: string, city: string, venue: string}>) {
+    const container = document.getElementById('agendaContent');
+    if (!container) return;
+
+    if (shows.length === 0) {
+      container.innerHTML = `
+        <div class="agenda-empty">
+          <span class="agenda-empty-icon">📭</span>
+          <p>Nenhum show agendado no momento.</p>
+          <p style="margin-top: 8px;">Fique ligado nas redes!</p>
+        </div>
+      `;
+      return;
+    }
+
+    const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+
+    let html = '';
+    for (const show of shows) {
+      const [day, month] = show.date.split('/');
+      const monthName = months[parseInt(month) - 1] || month;
+
+      html += `
+        <div class="agenda-show">
+          <div class="show-date-box">
+            <span class="show-date-day">${day}</span>
+            <span class="show-date-month">${monthName}</span>
+          </div>
+          <div class="show-info-box">
+            <span class="show-city">${show.city}</span>
+            ${show.venue ? `<span class="show-venue">${show.venue}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
+  }
+
+  // Carregar agenda do Google Docs
+  async function loadAgenda() {
+    if (agendaLoaded) return;
+
+    const container = document.getElementById('agendaContent');
+    if (!container) return;
+
+    try {
+      // Usa um proxy CORS ou tenta direto
+      // Como o Google Docs pode bloquear CORS, vamos tentar com um proxy público
+      const corsProxy = 'https://api.allorigins.win/raw?url=';
+      const url = corsProxy + encodeURIComponent(GOOGLE_DOC_EXPORT_URL);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'text/plain'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha ao carregar agenda');
+      }
+
+      const text = await response.text();
+      const shows = parseAgendaContent(text);
+
+      if (shows.length > 0) {
+        renderAgenda(shows);
+        agendaLoaded = true;
+      } else {
+        // Se parseou mas não encontrou shows, usa fallback
+        renderAgenda(fallbackShows);
+        agendaLoaded = true;
+      }
+    } catch (error) {
+      console.warn('Erro ao carregar agenda do Google Docs, usando fallback:', error);
+      // Usa dados estáticos como fallback
+      renderAgenda(fallbackShows);
+      agendaLoaded = true;
+    }
+  }
+
+  // Observar quando a janela da agenda é aberta
+  const calendarWindow = document.getElementById('win-calendar');
+  if (calendarWindow) {
+    // Observer para detectar quando a janela fica visível
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          const display = (calendarWindow as HTMLElement).style.display;
+          if (display !== 'none' && !agendaLoaded) {
+            loadAgenda();
+          }
+        }
+      }
+    });
+
+    observer.observe(calendarWindow, { attributes: true });
+
+    // Também carrega se a janela já estiver visível no load
+    if (calendarWindow.style.display !== 'none') {
+      loadAgenda();
+    }
+  }
+
+  // Também carrega quando clicar no ícone da agenda
+  const calendarIcon = document.querySelector('[data-window-id="win-calendar"]');
+  if (calendarIcon) {
+    calendarIcon.addEventListener('click', () => {
+      setTimeout(loadAgenda, 100);
+    });
+    calendarIcon.addEventListener('dblclick', () => {
+      setTimeout(loadAgenda, 100);
+    });
+  }
 </script>
