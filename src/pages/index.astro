@@ -280,11 +280,13 @@ const photos = [
           </div>
         </div>
 
-        <!-- Footer com botão YouTube -->
+        <!-- Footer com 2 botões lado a lado -->
         <div class="video-footer-buttons">
-          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn youtube-big-btn">
-            <span class="btn-icon">📺</span>
-            <span class="btn-text">Inscreva-se no YouTube</span>
+          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn-small youtube-btn">
+            📺 YouTube
+          </a>
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn-small instagram-btn">
+            📱 Instagram
           </a>
         </div>
       </div>
@@ -862,20 +864,19 @@ Valeu!
     flex-direction: column;
   }
 
-  /* Wrapper para cortar o header do Instagram */
+  /* Wrapper para cortar o header e mostrar só 3 posts */
   .instagram-embed-wrapper {
     overflow: hidden;
     position: relative;
-    height: 180px;
-    flex: 1;
+    height: 160px; /* Altura para 1 linha de 3 posts */
   }
 
   .instagram-embed-iframe {
     position: absolute;
-    top: -280px; /* Esconde o header do perfil */
+    top: -340px; /* Esconde header do perfil */
     left: 0;
     width: 100%;
-    height: 500px;
+    height: 600px;
     border: none;
     background: #fff;
     /* Esconde scrollbar */
@@ -903,58 +904,53 @@ Valeu!
     background: linear-gradient(135deg, #9c4dc4, #fe3e3e, #fdc255);
   }
 
-  /* Video footer buttons */
+  /* Video footer buttons - 2 botões lado a lado */
   .video-footer-buttons {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 10px;
+    flex-direction: row;
+    gap: 10px;
+    padding: 8px;
     background: #c0c0c0;
     border-top: 2px groove #fff;
-  }
-
-  .video-btn {
-    display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 12px 20px;
+  }
+
+  .video-btn-small {
+    flex: 1;
+    max-width: 140px;
+    padding: 6px 12px;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: bold;
+    text-align: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    background: #c0c0c0;
+    color: #000;
     box-shadow:
-      inset -1px -1px 0 var(--window-border-darker),
-      inset 1px 1px 0 var(--window-border-light),
-      inset -2px -2px 0 var(--window-border-dark),
-      inset 2px 2px 0 var(--white);
+      inset -1px -1px 0 #404040,
+      inset 1px 1px 0 #fff,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #dfdfdf;
   }
 
-  .video-btn:active {
+  .video-btn-small:hover {
+    background: #d0d0d0;
+  }
+
+  .video-btn-small:active {
     box-shadow:
-      inset 1px 1px 0 var(--window-border-darker),
-      inset -1px -1px 0 var(--window-border-light),
-      inset 2px 2px 0 var(--window-border-dark),
-      inset -2px -2px 0 var(--white);
+      inset 1px 1px 0 #404040,
+      inset -1px -1px 0 #fff,
+      inset 2px 2px 0 #808080,
+      inset -2px -2px 0 #dfdfdf;
   }
 
-  .btn-icon {
-    font-size: 18px;
+  .youtube-btn {
+    background: #c0c0c0;
   }
 
-  .btn-text {
-    font-family: 'Press Start 2P', cursive;
-  }
-
-  .youtube-big-btn {
-    background: linear-gradient(180deg, #ff4444 0%, #cc0000 100%);
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  }
-
-  .youtube-big-btn:hover {
-    background: linear-gradient(180deg, #ff6666 0%, #ee0000 100%);
+  .instagram-btn {
+    background: #c0c0c0;
   }
 
   /* Audio window layout */
@@ -1630,34 +1626,28 @@ Valeu!
     }
 
     .instagram-embed-wrapper {
-      height: 140px;
+      height: 120px;
     }
 
     .instagram-embed-iframe {
-      top: -260px;
-      height: 450px;
+      top: -320px;
+      height: 550px;
     }
 
     .instagram-fallback-btn {
-      padding: 6px 10px;
+      padding: 4px 8px;
       font-size: 7px;
     }
 
     .video-footer-buttons {
       padding: 6px;
-      gap: 4px;
-      flex-direction: row;
+      gap: 6px;
     }
 
-    .video-btn {
-      padding: 6px 10px;
-      font-size: 7px;
-      gap: 4px;
-      flex: 1;
-    }
-
-    .btn-icon {
-      font-size: 12px;
+    .video-btn-small {
+      padding: 4px 8px;
+      font-size: 8px;
+      max-width: 100px;
     }
 
     /* Notepad mobile */
