@@ -240,7 +240,7 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={480} height={340} x={180} y={60}>
+    <Window id="win-videos" title="Videos" width={520} height={480} x={160} y={40}>
       <div class="videos-window-content">
         <!-- Seção YouTube - Destaque -->
         <div class="video-section youtube-section">
@@ -258,15 +258,35 @@ const photos = [
           </div>
         </div>
 
+        <!-- Seção Instagram - Embed do Perfil -->
+        <div class="video-section instagram-embed-section">
+          <div class="section-header instagram-section-header">
+            <span>📱 @WALLITABAND</span>
+          </div>
+          <div class="instagram-embed-container">
+            <iframe
+              src="https://www.instagram.com/wallitaband/embed"
+              class="instagram-embed-iframe"
+              frameborder="0"
+              scrolling="yes"
+              allowtransparency="true">
+            </iframe>
+            <!-- Fallback se o embed não carregar -->
+            <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-fallback-btn">
+              <span>📱 Abrir Instagram @wallitaband</span>
+            </a>
+          </div>
+        </div>
+
         <!-- Footer com botões -->
         <div class="video-footer-buttons">
           <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn youtube-big-btn">
             <span class="btn-icon">📺</span>
-            <span class="btn-text">Ver mais no YouTube</span>
+            <span class="btn-text">YouTube</span>
           </a>
           <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn instagram-big-btn">
             <span class="btn-icon">📱</span>
-            <span class="btn-text">Ver vídeos no Instagram</span>
+            <span class="btn-text">Instagram</span>
           </a>
         </div>
       </div>
@@ -820,7 +840,52 @@ Valeu!
   }
 
   .youtube-section .youtube-embed {
-    height: 200px;
+    height: 180px;
+  }
+
+  /* Instagram embed section */
+  .instagram-embed-section {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .instagram-section-header {
+    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+  }
+
+  .instagram-embed-container {
+    flex: 1;
+    min-height: 120px;
+    background: #fafafa;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .instagram-embed-iframe {
+    width: 100%;
+    flex: 1;
+    min-height: 120px;
+    border: none;
+    background: #fff;
+  }
+
+  .instagram-fallback-btn {
+    display: block;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    font-size: 9px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .instagram-fallback-btn:hover {
+    background: linear-gradient(135deg, #9c4dc4, #fe3e3e, #fdc255);
   }
 
   /* Video footer buttons */
@@ -1552,22 +1617,37 @@ Valeu!
     }
 
     .youtube-section .youtube-embed {
-      height: 140px;
+      height: 120px;
+    }
+
+    .instagram-embed-container {
+      min-height: 100px;
+    }
+
+    .instagram-embed-iframe {
+      min-height: 100px;
+    }
+
+    .instagram-fallback-btn {
+      padding: 6px 10px;
+      font-size: 7px;
     }
 
     .video-footer-buttons {
       padding: 6px;
-      gap: 6px;
+      gap: 4px;
+      flex-direction: row;
     }
 
     .video-btn {
-      padding: 8px 12px;
-      font-size: 8px;
-      gap: 6px;
+      padding: 6px 10px;
+      font-size: 7px;
+      gap: 4px;
+      flex: 1;
     }
 
     .btn-icon {
-      font-size: 14px;
+      font-size: 12px;
     }
 
     /* Notepad mobile */
