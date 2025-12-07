@@ -240,13 +240,11 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={560} height={440} x={180} y={60}>
-      <div class="video-window-content">
-        <div class="video-container">
+    <Window id="win-videos" title="Videos" width={560} height={400} x={180} y={60}>
+      <div class="videos-window-content">
+        <div class="youtube-embed">
           <iframe
-            width="100%"
-            height="315"
-            src="https://www.youtube.com/embed/OqDDSTlLU7Q"
+            src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
             title="Wallita"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -262,28 +260,26 @@ const photos = [
     </Window>
 
     <!-- Janela: Áudio -->
-    <Window id="win-audio" title="Audio Player" width={400} height={340} x={250} y={120}>
+    <Window id="win-audio" title="Audio Player - Spotify" width={400} height={450} x={250} y={80}>
       <div class="audio-window-content">
         <div class="audio-header">
-          <p style="margin-bottom: 8px; font-size: 10px;">🎧 Player de Audio</p>
-          <div class="audio-visual">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-          </div>
+          <p style="margin-bottom: 8px; font-size: 10px;">🎧 LANCAMENTOS WALLITA</p>
         </div>
-        <div class="audio-tracks">
-          <p style="font-size: 8px; color: #000080; margin-bottom: 6px;">LANCAMENTOS:</p>
-          <div class="track-item">🔥 Solteira (Novo!)</div>
-          <div class="track-item">🎸 Mais em breve...</div>
+        <div class="spotify-embed">
+          <iframe
+            style="border-radius: 12px;"
+            src="https://open.spotify.com/embed/artist/2KPeAwg1B1P3WROMy9JdQk?utm_source=generator&theme=0"
+            width="100%"
+            height="300"
+            frameBorder="0"
+            allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
         </div>
         <div class="audio-footer">
           <a href="https://open.spotify.com/intl-pt/artist/2KPeAwg1B1P3WROMy9JdQk" target="_blank" class="win95-btn spotify-btn">
-            🎵 Ouvir no Spotify
+            🎵 Abrir no Spotify
           </a>
         </div>
       </div>
@@ -341,8 +337,8 @@ Valeu!
     </Window>
 
     <!-- Janela: Secreto - Caveira Dance -->
-    <Window id="win-folder3" title="Secreto - ??? " width={400} height={360} x={300} y={100}>
-      <div class="video-container secreto-video">
+    <Window id="win-folder3" title="Secreto - ??? " width={480} height={420} x={300} y={80}>
+      <div class="secreto-container">
         <video
           src="/videos/caveiradance.mp4"
           autoplay
@@ -350,7 +346,7 @@ Valeu!
           muted
           playsinline
           controls
-          style="width: 100%; height: 100%; object-fit: contain; background: #000;">
+          class="secreto-video">
         </video>
       </div>
     </Window>
@@ -478,6 +474,25 @@ Valeu!
           <img id="popwalliImg" src="/images/popwalli.jpeg" alt="Oferta" style="display: block; width: 100%; height: auto; max-width: 400px; cursor: pointer;" />
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Canvas de Desenho -->
+  <div class="draw-overlay" id="drawOverlay" style="display: none;">
+    <canvas id="drawCanvas"></canvas>
+    <div class="draw-controls">
+      <div class="color-picker">
+        <button class="color-btn active" data-color="#ff0000" style="background: #ff0000;"></button>
+        <button class="color-btn" data-color="#ff6600" style="background: #ff6600;"></button>
+        <button class="color-btn" data-color="#ffff00" style="background: #ffff00;"></button>
+        <button class="color-btn" data-color="#00ff00" style="background: #00ff00;"></button>
+        <button class="color-btn" data-color="#00ffff" style="background: #00ffff;"></button>
+        <button class="color-btn" data-color="#0000ff" style="background: #0000ff;"></button>
+        <button class="color-btn" data-color="#ff00ff" style="background: #ff00ff;"></button>
+        <button class="color-btn" data-color="#ffffff" style="background: #ffffff;"></button>
+        <button class="color-btn" data-color="#000000" style="background: #000000;"></button>
+      </div>
+      <button class="draw-close-btn" id="drawCloseBtn" title="Fechar (ESC)">X</button>
     </div>
   </div>
 
@@ -748,11 +763,26 @@ Valeu!
   }
 
   /* Video window layout */
-  .video-window-content {
+  /* Videos window layout */
+  .videos-window-content {
     display: flex;
     flex-direction: column;
     height: 100%;
+    background: #c0c0c0;
+  }
+
+  .youtube-embed {
+    flex: 1;
     background: #000;
+    position: relative;
+  }
+
+  .youtube-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .video-footer {
@@ -760,6 +790,7 @@ Valeu!
     background: #c0c0c0;
     text-align: center;
     border-top: 2px groove #fff;
+    flex-shrink: 0;
   }
 
   .youtube-btn {
@@ -782,37 +813,30 @@ Valeu!
     flex-direction: column;
     height: 100%;
     background: #c0c0c0;
-    padding: 12px;
+    padding: 8px;
   }
 
   .audio-header {
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    padding: 4px;
   }
 
-  .audio-tracks {
+  .spotify-embed {
     flex: 1;
-    background: #fff;
-    border: 2px inset #808080;
-    padding: 8px;
-    margin-bottom: 12px;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 8px;
   }
 
-  .track-item {
-    padding: 6px 8px;
-    margin-bottom: 4px;
-    background: #f0f0f0;
-    font-size: 9px;
-    border: 1px solid #ccc;
-  }
-
-  .track-item:hover {
-    background: #e0e0ff;
-    border-color: #000080;
+  .spotify-embed iframe {
+    display: block;
   }
 
   .audio-footer {
     text-align: center;
+    padding: 4px 0;
   }
 
   .spotify-btn {
@@ -826,6 +850,22 @@ Valeu!
 
   .spotify-btn:hover {
     background: #1ed760;
+  }
+
+  /* Secreto video container */
+  .secreto-container {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .secreto-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   /* Photos window layout */
@@ -1364,6 +1404,113 @@ Valeu!
     .loading-bar {
       width: 100px;
       height: 12px;
+    }
+  }
+
+  /* ========== CANVAS DE DESENHO ========== */
+  .draw-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 40px);
+    z-index: 8000;
+    pointer-events: all;
+  }
+
+  #drawCanvas {
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+  }
+
+  .draw-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--window-bg);
+    padding: 6px 10px;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light),
+      inset -2px -2px 0 var(--window-border-dark),
+      inset 2px 2px 0 var(--white),
+      4px 4px 0 rgba(0, 0, 0, 0.5);
+    z-index: 8001;
+  }
+
+  .color-picker {
+    display: flex;
+    gap: 4px;
+  }
+
+  .color-btn {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #808080;
+    cursor: pointer;
+    box-shadow:
+      inset -1px -1px 0 #404040,
+      inset 1px 1px 0 #fff;
+  }
+
+  .color-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .color-btn.active {
+    border: 3px solid #000;
+    box-shadow:
+      0 0 0 2px #ffff00,
+      inset -1px -1px 0 #404040,
+      inset 1px 1px 0 #fff;
+  }
+
+  .draw-close-btn {
+    width: 28px;
+    height: 28px;
+    background: #c00;
+    color: #fff;
+    border: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      inset -1px -1px 0 #800,
+      inset 1px 1px 0 #f66;
+  }
+
+  .draw-close-btn:hover {
+    background: #f00;
+  }
+
+  @media screen and (max-width: 768px) {
+    .draw-overlay {
+      height: calc(100vh - 44px);
+    }
+
+    .draw-controls {
+      top: 5px;
+      right: 5px;
+      padding: 4px 6px;
+      gap: 6px;
+    }
+
+    .color-btn {
+      width: 20px;
+      height: 20px;
+    }
+
+    .draw-close-btn {
+      width: 32px;
+      height: 32px;
+      font-size: 12px;
     }
   }
 </style>
@@ -2149,4 +2296,159 @@ Valeu!
       setTimeout(loadAgenda, 100);
     });
   }
+
+  // ========== SISTEMA DE DESENHO ==========
+  const drawBtn = document.getElementById('drawBtn');
+  const drawOverlay = document.getElementById('drawOverlay');
+  const drawCanvas = document.getElementById('drawCanvas') as HTMLCanvasElement;
+  const drawCloseBtn = document.getElementById('drawCloseBtn');
+  const colorBtns = document.querySelectorAll('.color-btn');
+
+  let isDrawingMode = false;
+  let isDrawing = false;
+  let currentColor = '#ff0000';
+  let ctx: CanvasRenderingContext2D | null = null;
+  let lastX = 0;
+  let lastY = 0;
+
+  // Inicializar canvas
+  function initCanvas() {
+    if (!drawCanvas) return;
+
+    // Ajustar tamanho do canvas para a resolução real
+    const rect = drawCanvas.getBoundingClientRect();
+    drawCanvas.width = rect.width * window.devicePixelRatio;
+    drawCanvas.height = rect.height * window.devicePixelRatio;
+
+    ctx = drawCanvas.getContext('2d');
+    if (ctx) {
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = currentColor;
+    }
+  }
+
+  // Ativar modo de desenho
+  function enableDrawMode() {
+    isDrawingMode = true;
+    if (drawOverlay) drawOverlay.style.display = 'block';
+    if (drawBtn) drawBtn.classList.add('active');
+    initCanvas();
+  }
+
+  // Desativar modo de desenho
+  function disableDrawMode() {
+    isDrawingMode = false;
+    if (drawOverlay) drawOverlay.style.display = 'none';
+    if (drawBtn) drawBtn.classList.remove('active');
+    // Limpar canvas
+    if (ctx && drawCanvas) {
+      ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+    }
+  }
+
+  // Toggle do modo de desenho
+  drawBtn?.addEventListener('click', () => {
+    if (isDrawingMode) {
+      disableDrawMode();
+    } else {
+      enableDrawMode();
+    }
+  });
+
+  // Fechar com botão X
+  drawCloseBtn?.addEventListener('click', () => {
+    disableDrawMode();
+  });
+
+  // Fechar com ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isDrawingMode) {
+      disableDrawMode();
+    }
+  });
+
+  // Selecionar cor
+  colorBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      colorBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentColor = (btn as HTMLElement).dataset.color || '#ff0000';
+      if (ctx) ctx.strokeStyle = currentColor;
+    });
+  });
+
+  // Funções de desenho
+  function getDrawPosition(e: MouseEvent | TouchEvent): { x: number; y: number } {
+    const rect = drawCanvas.getBoundingClientRect();
+    if ('touches' in e) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    }
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  }
+
+  function startDrawing(e: MouseEvent | TouchEvent) {
+    if (!isDrawingMode || !ctx) return;
+    isDrawing = true;
+    const pos = getDrawPosition(e);
+    lastX = pos.x;
+    lastY = pos.y;
+    // Desenhar um ponto inicial
+    ctx.beginPath();
+    ctx.arc(lastX, lastY, ctx.lineWidth / 2, 0, Math.PI * 2);
+    ctx.fillStyle = currentColor;
+    ctx.fill();
+  }
+
+  function draw(e: MouseEvent | TouchEvent) {
+    if (!isDrawing || !ctx) return;
+    e.preventDefault();
+    const pos = getDrawPosition(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    lastX = pos.x;
+    lastY = pos.y;
+  }
+
+  function stopDrawing() {
+    isDrawing = false;
+  }
+
+  // Event listeners para mouse
+  drawCanvas?.addEventListener('mousedown', startDrawing);
+  drawCanvas?.addEventListener('mousemove', draw);
+  drawCanvas?.addEventListener('mouseup', stopDrawing);
+  drawCanvas?.addEventListener('mouseleave', stopDrawing);
+
+  // Event listeners para touch
+  drawCanvas?.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    startDrawing(e);
+  }, { passive: false });
+
+  drawCanvas?.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    draw(e);
+  }, { passive: false });
+
+  drawCanvas?.addEventListener('touchend', stopDrawing);
+  drawCanvas?.addEventListener('touchcancel', stopDrawing);
+
+  // Redimensionar canvas ao mudar tamanho da janela
+  window.addEventListener('resize', () => {
+    if (isDrawingMode) {
+      initCanvas();
+    }
+  });
 </script>
