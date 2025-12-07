@@ -240,14 +240,14 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos - YouTube & Instagram" width={620} height={520} x={150} y={40}>
+    <Window id="win-videos" title="Videos" width={500} height={420} x={180} y={60}>
       <div class="videos-window-content">
         <!-- Seção YouTube - Destaque -->
         <div class="video-section youtube-section">
           <div class="section-header">
             <span>🎬 LYRIC VIDEO</span>
           </div>
-          <div class="youtube-embed" data-video-container>
+          <div class="youtube-embed">
             <iframe
               src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
               title="Wallita - Lyric Video"
@@ -258,53 +258,34 @@ const photos = [
           </div>
         </div>
 
-        <!-- Seção Instagram Reels -->
-        <div class="video-section instagram-section">
-          <div class="section-header">
-            <span>📱 REELS @wallitaband</span>
+        <!-- Seção Instagram - Thumbnails estilizados -->
+        <div class="video-section instagram-promo">
+          <div class="section-header instagram-header">
+            <span>📱 SIGA NO INSTAGRAM</span>
           </div>
-          <div class="instagram-grid">
-            <!-- Reel 1 -->
-            <div class="instagram-video-wrapper" data-video-container>
-              <div class="instagram-thumb" data-reel="https://www.instagram.com/reel/DCuIBxRRlKB/">
-                <div class="thumb-overlay">
-                  <span class="play-icon">▶</span>
-                  <span class="instagram-icon">📷</span>
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-promo-link">
+            <div class="instagram-thumbs-row">
+              <div class="insta-thumb">
+                <div class="insta-thumb-inner">
+                  <span class="insta-play">▶</span>
                 </div>
-                <div class="thumb-bg">REEL 1</div>
+              </div>
+              <div class="insta-thumb">
+                <div class="insta-thumb-inner">
+                  <span class="insta-play">▶</span>
+                </div>
+              </div>
+              <div class="insta-thumb">
+                <div class="insta-thumb-inner">
+                  <span class="insta-play">▶</span>
+                </div>
               </div>
             </div>
-            <!-- Reel 2 -->
-            <div class="instagram-video-wrapper" data-video-container>
-              <div class="instagram-thumb" data-reel="https://www.instagram.com/reel/DCZeWZgxf5E/">
-                <div class="thumb-overlay">
-                  <span class="play-icon">▶</span>
-                  <span class="instagram-icon">📷</span>
-                </div>
-                <div class="thumb-bg">REEL 2</div>
-              </div>
+            <div class="instagram-cta">
+              <span class="instagram-handle">@wallitaband</span>
+              <span class="instagram-arrow">→</span>
             </div>
-            <!-- Reel 3 -->
-            <div class="instagram-video-wrapper" data-video-container>
-              <div class="instagram-thumb" data-reel="https://www.instagram.com/reel/DBbWlA9Rfl_/">
-                <div class="thumb-overlay">
-                  <span class="play-icon">▶</span>
-                  <span class="instagram-icon">📷</span>
-                </div>
-                <div class="thumb-bg">REEL 3</div>
-              </div>
-            </div>
-            <!-- Reel 4 -->
-            <div class="instagram-video-wrapper" data-video-container>
-              <div class="instagram-thumb" data-reel="https://www.instagram.com/reel/C_3F_UWR1uJ/">
-                <div class="thumb-overlay">
-                  <span class="play-icon">▶</span>
-                  <span class="instagram-icon">📷</span>
-                </div>
-                <div class="thumb-bg">REEL 4</div>
-              </div>
-            </div>
-          </div>
+          </a>
         </div>
 
         <!-- Footer com links -->
@@ -905,111 +886,94 @@ Valeu!
     margin-bottom: 4px;
   }
 
+  .instagram-header {
+    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+  }
+
   .youtube-section .youtube-embed {
-    height: 180px;
+    height: 200px;
   }
 
-  /* Instagram grid */
-  .instagram-section {
-    flex: 1;
-    overflow: hidden;
-  }
-
-  .instagram-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    padding: 4px;
+  /* Instagram promo section */
+  .instagram-promo {
     background: #1a1a1a;
-    max-height: 140px;
-    overflow-y: auto;
+    padding: 8px;
   }
 
-  .instagram-video-wrapper {
-    aspect-ratio: 9/16;
-    max-height: 120px;
+  .instagram-promo-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .instagram-promo-link:hover .insta-thumb {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  }
+
+  .instagram-thumbs-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .insta-thumb {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    border: 2px solid #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
     cursor: pointer;
   }
 
-  .instagram-video-wrapper.expanded {
-    grid-column: span 2;
-    grid-row: span 2;
-    max-height: none;
-    z-index: 10;
-  }
-
-  .instagram-video-wrapper.collapsed {
-    opacity: 0.6;
-    transform: scale(0.9);
-  }
-
-  .instagram-thumb {
+  .insta-thumb-inner {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    border: 2px solid #333;
-    overflow: hidden;
   }
 
-  .instagram-thumb:hover {
-    border-color: #fff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  }
-
-  .thumb-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 2;
-  }
-
-  .play-icon {
-    font-size: 24px;
+  .insta-play {
+    font-size: 28px;
     color: #fff;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    opacity: 0.9;
   }
 
-  .instagram-icon {
-    font-size: 12px;
-    margin-top: 4px;
-  }
-
-  .thumb-bg {
-    font-size: 8px;
+  .instagram-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px;
+    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
     color: #fff;
-    opacity: 0.5;
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
+    font-size: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   }
 
-  /* Instagram embed iframe */
-  .instagram-video-wrapper iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+  .instagram-handle {
+    font-weight: bold;
   }
 
-  .instagram-video-wrapper.has-embed {
-    aspect-ratio: auto;
-    max-height: none;
-    height: auto;
+  .instagram-arrow {
+    font-size: 14px;
+    animation: arrowBounce 1s ease-in-out infinite;
   }
 
-  .instagram-video-wrapper.has-embed.expanded {
-    height: 280px;
+  @keyframes arrowBounce {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+  }
+
+  .instagram-promo-link:hover .instagram-cta {
+    background: linear-gradient(90deg, #9c4dc4, #fe3e3e, #fdc255);
   }
 
   /* Audio window layout */
@@ -1680,27 +1644,32 @@ Valeu!
       height: 140px;
     }
 
-    .instagram-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 4px;
-      padding: 3px;
-      max-height: 120px;
+    .instagram-promo {
+      padding: 6px;
     }
 
-    .instagram-video-wrapper {
-      max-height: 100px;
+    .instagram-thumbs-row {
+      gap: 6px;
+      margin-bottom: 6px;
     }
 
-    .play-icon {
-      font-size: 18px;
+    .insta-thumb {
+      width: 60px;
+      height: 60px;
     }
 
-    .instagram-icon {
-      font-size: 10px;
+    .insta-play {
+      font-size: 20px;
     }
 
-    .thumb-bg {
-      font-size: 6px;
+    .instagram-cta {
+      padding: 4px;
+      font-size: 8px;
+      gap: 6px;
+    }
+
+    .instagram-arrow {
+      font-size: 12px;
     }
 
     .video-footer {
@@ -2935,44 +2904,6 @@ Valeu!
       setTimeout(loadAgenda, 100);
     });
   }
-
-  // ========== SISTEMA DE VÍDEOS INSTAGRAM ==========
-  const instagramThumbs = document.querySelectorAll('.instagram-thumb[data-reel]');
-  const instagramWrappers = document.querySelectorAll('.instagram-video-wrapper');
-
-  instagramThumbs.forEach(thumb => {
-    thumb.addEventListener('click', () => {
-      const reelUrl = (thumb as HTMLElement).dataset.reel;
-      if (reelUrl) {
-        // Abrir reel no Instagram em nova aba
-        window.open(reelUrl, '_blank');
-      }
-    });
-  });
-
-  // Efeito de hover expandido nos wrappers
-  instagramWrappers.forEach(wrapper => {
-    wrapper.addEventListener('mouseenter', () => {
-      // Expandir este, colapsar outros
-      instagramWrappers.forEach(w => {
-        if (w === wrapper) {
-          w.classList.add('expanded');
-          w.classList.remove('collapsed');
-        } else {
-          w.classList.add('collapsed');
-          w.classList.remove('expanded');
-        }
-      });
-    });
-  });
-
-  // Resetar ao sair do grid
-  const instagramGrid = document.querySelector('.instagram-grid');
-  instagramGrid?.addEventListener('mouseleave', () => {
-    instagramWrappers.forEach(w => {
-      w.classList.remove('expanded', 'collapsed');
-    });
-  });
 
   // ========== SISTEMA DE DESENHO ==========
   const drawBtn = document.getElementById('drawBtn');
