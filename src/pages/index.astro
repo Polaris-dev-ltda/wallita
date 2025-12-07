@@ -240,48 +240,30 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={540} height={340} x={160} y={40}>
+    <Window id="win-videos" title="Videos" width={420} height={320} x={160} y={40}>
       <div class="videos-window-content">
-        <!-- Container lado a lado -->
-        <div class="videos-container">
-          <!-- Coluna YouTube -->
-          <div class="video-column">
-            <div class="column-header youtube-header">
-              <span>🎬 LYRIC VIDEO</span>
-            </div>
-            <div class="video-embed youtube-embed">
-              <iframe
-                src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
-                title="Wallita - Lyric Video"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-              </iframe>
-            </div>
-          </div>
+        <!-- Header -->
+        <div class="video-header">
+          <span>🎬 LYRIC VIDEO - WALLITA</span>
+        </div>
 
-          <!-- Coluna Instagram -->
-          <div class="video-column">
-            <div class="column-header instagram-header">
-              <span>📱 ÚLTIMO POST</span>
-            </div>
-            <div class="video-embed instagram-embed">
-              <iframe
-                src="https://www.instagram.com/wallitaband/embed"
-                frameborder="0"
-                scrolling="no"
-                allowtransparency="true">
-              </iframe>
-            </div>
-          </div>
+        <!-- YouTube embed -->
+        <div class="youtube-container">
+          <iframe
+            src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
+            title="Wallita - Lyric Video"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
         </div>
 
         <!-- Botões lado a lado -->
         <div class="video-buttons-row">
-          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn-small">
+          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn">
             📺 YouTube
           </a>
-          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn-small">
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn">
             📱 Instagram
           </a>
         </div>
@@ -822,58 +804,26 @@ Valeu!
     height: 100%;
   }
 
-  /* Videos - Layout lado a lado */
-  .videos-container {
-    display: flex;
-    gap: 8px;
-    padding: 8px;
-    flex: 1;
-  }
-
-  .video-column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  .column-header {
-    padding: 4px 8px;
-    font-size: 8px;
-    font-weight: bold;
+  /* Videos - Layout simples */
+  .video-header {
+    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
     color: #fff;
+    padding: 4px 8px;
+    font-size: 9px;
+    font-weight: bold;
     text-align: center;
   }
 
-  .youtube-header {
-    background: linear-gradient(90deg, #cc0000, #ff4444);
-  }
-
-  .instagram-header {
-    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-  }
-
-  .video-embed {
+  .youtube-container {
     flex: 1;
-    min-height: 180px;
     background: #000;
+    aspect-ratio: 16 / 9;
   }
 
-  .video-embed iframe {
+  .youtube-container iframe {
     width: 100%;
     height: 100%;
     border: none;
-  }
-
-  .instagram-embed {
-    background: #fafafa;
-    overflow: hidden;
-  }
-
-  .instagram-embed iframe {
-    width: 100%;
-    height: 100%;
-    min-height: 180px;
   }
 
   /* Botões lado a lado */
@@ -886,8 +836,8 @@ Valeu!
     justify-content: center;
   }
 
-  .video-btn-small {
-    padding: 6px 16px;
+  .video-btn {
+    padding: 6px 20px;
     text-decoration: none;
     font-size: 10px;
     font-weight: bold;
@@ -902,24 +852,16 @@ Valeu!
       inset 2px 2px 0 #dfdfdf;
   }
 
-  .video-btn-small:hover {
+  .video-btn:hover {
     background: #d0d0d0;
   }
 
-  .video-btn-small:active {
+  .video-btn:active {
     box-shadow:
       inset 1px 1px 0 #404040,
       inset -1px -1px 0 #fff,
       inset 2px 2px 0 #808080,
       inset -2px -2px 0 #dfdfdf;
-  }
-
-  .youtube-btn {
-    background: #c0c0c0;
-  }
-
-  .instagram-btn {
-    background: #c0c0c0;
   }
 
   /* Audio window layout */
@@ -1580,34 +1522,10 @@ Valeu!
       height: 200px;
     }
 
-    /* Instagram section mobile */
-    .section-header {
-      font-size: 6px;
-      padding: 3px 6px;
-    }
-
-    /* Videos mobile - empilhar verticalmente */
-    .videos-container {
-      flex-direction: column;
-      gap: 6px;
-      padding: 6px;
-    }
-
-    .video-column {
-      min-height: auto;
-    }
-
-    .column-header {
+    /* Videos mobile */
+    .video-header {
       font-size: 7px;
       padding: 3px 6px;
-    }
-
-    .video-embed {
-      min-height: 120px;
-    }
-
-    .instagram-embed iframe {
-      min-height: 120px;
     }
 
     .video-buttons-row {
@@ -1615,8 +1533,8 @@ Valeu!
       gap: 8px;
     }
 
-    .video-btn-small {
-      padding: 4px 10px;
+    .video-btn {
+      padding: 4px 12px;
       font-size: 8px;
     }
 
