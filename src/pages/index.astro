@@ -240,66 +240,48 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={480} height={420} x={160} y={40}>
+    <Window id="win-videos" title="Videos" width={540} height={340} x={160} y={40}>
       <div class="videos-window-content">
-        <!-- Seção YouTube - Destaque -->
-        <div class="video-section youtube-section">
-          <div class="section-header">
-            <span>🎬 LYRIC VIDEO</span>
+        <!-- Container lado a lado -->
+        <div class="videos-container">
+          <!-- Coluna YouTube -->
+          <div class="video-column">
+            <div class="column-header youtube-header">
+              <span>🎬 LYRIC VIDEO</span>
+            </div>
+            <div class="video-embed youtube-embed">
+              <iframe
+                src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
+                title="Wallita - Lyric Video"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-          <div class="youtube-embed">
-            <iframe
-              src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
-              title="Wallita - Lyric Video"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+
+          <!-- Coluna Instagram -->
+          <div class="video-column">
+            <div class="column-header instagram-header">
+              <span>📱 ÚLTIMO POST</span>
+            </div>
+            <div class="video-embed instagram-embed">
+              <iframe
+                src="https://www.instagram.com/wallitaband/embed"
+                frameborder="0"
+                scrolling="no"
+                allowtransparency="true">
+              </iframe>
+            </div>
           </div>
         </div>
 
-        <!-- Seção Instagram - Thumbnails clicáveis -->
-        <div class="video-section instagram-section">
-          <div class="section-header instagram-section-header">
-            <span>📱 @WALLITABAND</span>
-          </div>
-          <div class="instagram-grid">
-            <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-thumb">
-              <div class="thumb-placeholder">
-                <span class="thumb-icon">🎸</span>
-                <span class="thumb-text">POST 1</span>
-              </div>
-              <div class="thumb-overlay">
-                <span>▶ Ver no Instagram</span>
-              </div>
-            </a>
-            <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-thumb">
-              <div class="thumb-placeholder">
-                <span class="thumb-icon">🎤</span>
-                <span class="thumb-text">POST 2</span>
-              </div>
-              <div class="thumb-overlay">
-                <span>▶ Ver no Instagram</span>
-              </div>
-            </a>
-            <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-thumb">
-              <div class="thumb-placeholder">
-                <span class="thumb-icon">🥁</span>
-                <span class="thumb-text">POST 3</span>
-              </div>
-              <div class="thumb-overlay">
-                <span>▶ Ver no Instagram</span>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <!-- Footer com 2 botões lado a lado -->
-        <div class="video-footer-buttons">
-          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn-small youtube-btn">
+        <!-- Botões lado a lado -->
+        <div class="video-buttons-row">
+          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn-small">
             📺 YouTube
           </a>
-          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn-small instagram-btn">
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn-small">
             📱 Instagram
           </a>
         </div>
@@ -840,104 +822,63 @@ Valeu!
     height: 100%;
   }
 
-  /* Video sections */
-  .video-section {
-    margin-bottom: 8px;
+  /* Videos - Layout lado a lado */
+  .videos-container {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    flex: 1;
   }
 
-  .section-header {
-    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
-    color: #fff;
+  .video-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .column-header {
     padding: 4px 8px;
     font-size: 8px;
-    margin-bottom: 4px;
-  }
-
-  .youtube-section .youtube-embed {
-    height: 180px;
-  }
-
-  /* Instagram section - Grid de thumbnails */
-  .instagram-section {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .instagram-section-header {
-    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-  }
-
-  .instagram-grid {
-    display: flex;
-    gap: 4px;
-    padding: 4px;
-    background: #1a1a1a;
-    flex: 1;
-  }
-
-  .instagram-thumb {
-    flex: 1;
-    position: relative;
-    display: flex;
-    text-decoration: none;
-    overflow: hidden;
-    aspect-ratio: 1;
-    min-height: 100px;
-  }
-
-  .thumb-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-
-  .thumb-icon {
-    font-size: 28px;
-  }
-
-  .thumb-text {
-    font-size: 8px;
-    color: #fff;
     font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  }
-
-  .thumb-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  .thumb-overlay span {
     color: #fff;
-    font-size: 9px;
-    font-weight: bold;
     text-align: center;
   }
 
-  .instagram-thumb:hover .thumb-overlay {
-    opacity: 1;
+  .youtube-header {
+    background: linear-gradient(90deg, #cc0000, #ff4444);
   }
 
-  /* Video footer buttons - 2 botões lado a lado */
-  .video-footer-buttons {
+  .instagram-header {
+    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+  }
+
+  .video-embed {
+    flex: 1;
+    min-height: 180px;
+    background: #000;
+  }
+
+  .video-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .instagram-embed {
+    background: #fafafa;
+    overflow: hidden;
+  }
+
+  .instagram-embed iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+  }
+
+  /* Botões lado a lado */
+  .video-buttons-row {
     display: flex;
-    flex-direction: row;
     gap: 10px;
     padding: 8px;
     background: #c0c0c0;
@@ -946,9 +887,7 @@ Valeu!
   }
 
   .video-btn-small {
-    flex: 1;
-    max-width: 140px;
-    padding: 6px 12px;
+    padding: 6px 16px;
     text-decoration: none;
     font-size: 10px;
     font-weight: bold;
@@ -1647,40 +1586,38 @@ Valeu!
       padding: 3px 6px;
     }
 
-    .youtube-section .youtube-embed {
-      height: 120px;
-    }
-
-    .instagram-grid {
-      gap: 2px;
-      padding: 2px;
-    }
-
-    .instagram-thumb {
-      min-height: 70px;
-    }
-
-    .thumb-icon {
-      font-size: 18px;
-    }
-
-    .thumb-text {
-      font-size: 6px;
-    }
-
-    .thumb-overlay span {
-      font-size: 7px;
-    }
-
-    .video-footer-buttons {
-      padding: 6px;
+    /* Videos mobile - empilhar verticalmente */
+    .videos-container {
+      flex-direction: column;
       gap: 6px;
+      padding: 6px;
+    }
+
+    .video-column {
+      min-height: auto;
+    }
+
+    .column-header {
+      font-size: 7px;
+      padding: 3px 6px;
+    }
+
+    .video-embed {
+      min-height: 120px;
+    }
+
+    .instagram-embed iframe {
+      min-height: 120px;
+    }
+
+    .video-buttons-row {
+      padding: 6px;
+      gap: 8px;
     }
 
     .video-btn-small {
-      padding: 4px 8px;
+      padding: 4px 10px;
       font-size: 8px;
-      max-width: 100px;
     }
 
     /* Notepad mobile */
