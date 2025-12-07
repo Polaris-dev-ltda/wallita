@@ -240,47 +240,69 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={560} height={400} x={180} y={60}>
-      <div class="video-container">
-        <iframe
-          width="100%"
-          height="315"
-          src="https://www.youtube.com/embed/OqDDSTlLU7Q"
-          title="Wallita"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
+    <Window id="win-videos" title="Videos" width={560} height={440} x={180} y={60}>
+      <div class="video-window-content">
+        <div class="video-container">
+          <iframe
+            width="100%"
+            height="315"
+            src="https://www.youtube.com/embed/OqDDSTlLU7Q"
+            title="Wallita"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="video-footer">
+          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="win95-btn youtube-btn">
+            📺 Ver mais no YouTube
+          </a>
+        </div>
       </div>
     </Window>
 
     <!-- Janela: Áudio -->
-    <Window id="win-audio" title="Audio Player" width={400} height={250} x={250} y={120}>
-      <div class="content-center">
-        <p style="margin-bottom: 12px;">Player de Audio</p>
-        <div class="audio-visual">
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
+    <Window id="win-audio" title="Audio Player" width={400} height={340} x={250} y={120}>
+      <div class="audio-window-content">
+        <div class="audio-header">
+          <p style="margin-bottom: 8px; font-size: 10px;">🎧 Player de Audio</p>
+          <div class="audio-visual">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
         </div>
-        <p style="margin-top: 16px; font-size: 8px;">
-          Acesse o Spotify para ouvir!
-        </p>
+        <div class="audio-tracks">
+          <p style="font-size: 8px; color: #000080; margin-bottom: 6px;">LANCAMENTOS:</p>
+          <div class="track-item">🔥 Solteira (Novo!)</div>
+          <div class="track-item">🎸 Mais em breve...</div>
+        </div>
+        <div class="audio-footer">
+          <a href="https://open.spotify.com/intl-pt/artist/2KPeAwg1B1P3WROMy9JdQk" target="_blank" class="win95-btn spotify-btn">
+            🎵 Ouvir no Spotify
+          </a>
+        </div>
       </div>
     </Window>
 
     <!-- Janela: Fotos - GALERIA -->
-    <Window id="win-folder1" title="Fotos" width={650} height={480} x={120} y={50}>
-      <div class="photo-gallery">
-        {photos.map((photo, i) => (
-          <div class="photo-item">
-            <img src={photo} alt={`Foto ${i + 1}`} loading="lazy" />
-          </div>
-        ))}
+    <Window id="win-folder1" title="Fotos" width={650} height={520} x={120} y={50}>
+      <div class="photos-window-content">
+        <div class="photo-gallery">
+          {photos.map((photo, i) => (
+            <div class="photo-item">
+              <img src={photo} alt={`Foto ${i + 1}`} loading="lazy" />
+            </div>
+          ))}
+        </div>
+        <div class="photos-footer">
+          <span>📸 Siga no Instagram: </span>
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-link">@wallitaband</a>
+        </div>
       </div>
     </Window>
 
@@ -719,11 +741,106 @@ Valeu!
   }
 
   .video-container {
-    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #000;
+  }
+
+  /* Video window layout */
+  .video-window-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #000;
+  }
+
+  .video-footer {
+    padding: 10px;
+    background: #c0c0c0;
+    text-align: center;
+    border-top: 2px groove #fff;
+  }
+
+  .youtube-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 9px;
+    text-decoration: none;
+    color: #000;
+    background: #c0c0c0;
+  }
+
+  .youtube-btn:hover {
+    background: #ff0000;
+    color: #fff;
+  }
+
+  /* Audio window layout */
+  .audio-window-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #c0c0c0;
+    padding: 12px;
+  }
+
+  .audio-header {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .audio-tracks {
+    flex: 1;
+    background: #fff;
+    border: 2px inset #808080;
+    padding: 8px;
+    margin-bottom: 12px;
+  }
+
+  .track-item {
+    padding: 6px 8px;
+    margin-bottom: 4px;
+    background: #f0f0f0;
+    font-size: 9px;
+    border: 1px solid #ccc;
+  }
+
+  .track-item:hover {
+    background: #e0e0ff;
+    border-color: #000080;
+  }
+
+  .audio-footer {
+    text-align: center;
+  }
+
+  .spotify-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 9px;
+    text-decoration: none;
+    color: #fff;
+    background: #1DB954;
+  }
+
+  .spotify-btn:hover {
+    background: #1ed760;
+  }
+
+  /* Photos window layout */
+  .photos-window-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .photos-footer {
+    padding: 8px 12px;
+    background: #c0c0c0;
+    text-align: center;
+    font-size: 8px;
+    border-top: 2px groove #fff;
   }
 
   .notepad-content {
