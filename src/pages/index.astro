@@ -415,18 +415,25 @@ Valeu!
         </div>
       </div>
 
-      <!-- Popup 3 - VISITANTE 1.000.000 -->
-      <div class="virus-popup" id="popup3" data-popup-draggable style="left: 700px; top: 40px; display: none;">
-        <div class="popup-title" data-popup-drag-handle style="background: #ff6600;">
-          <span>PARABENS!!!</span>
+      <!-- Popup 3 - LOJA WALLITA / MERCH -->
+      <div class="virus-popup merch-popup" id="popup3" data-popup-draggable style="left: 650px; top: 40px; display: none; width: 340px;">
+        <div class="popup-title" data-popup-drag-handle style="background: linear-gradient(90deg, #ff6600, #ffcc00, #ff6600);">
+          <span>🛒 LOJA WALLITA - MERCH!!! 🛒</span>
           <button class="popup-close" data-popup-close="popup3">X</button>
         </div>
-        <div class="popup-body">
-          <p style="font-size: 24px; margin-bottom: 8px;">🎉</p>
-          <p style="font-weight: bold;">VOCE E O VISITANTE 1.000.000!</p>
-          <p style="font-size: 8px; margin-top: 4px;">Clique para resgatar seu IPHONE 15!</p>
-          <button class="win95-btn popup-btn" data-popup-close="popup3">RESGATAR</button>
+        <div class="popup-body merch-body" id="merchBody">
+          <p class="merch-title">COMPRE NOSSO MERCH!!!</p>
+          <div class="merch-images">
+            <img src="/images/ades.png" alt="Adesivos Wallita" class="merch-img" />
+            <img src="/images/camis.png" alt="Camisetas Wallita" class="merch-img" />
+          </div>
+          <p class="merch-subtitle">Adesivos e Camisetas exclusivas!</p>
+          <button class="win95-btn merch-btn" id="merchBtn">
+            🛒 ADQUIRA AGORA! 🛒
+          </button>
         </div>
+        <!-- Áudio do weunweun -->
+        <audio id="weunweunSound" src="/sounds/weunweun.mpeg" preload="auto"></audio>
       </div>
 
       <!-- Popup 4 - AUMENTE SEU AMIGÃO -->
@@ -1406,6 +1413,124 @@ Valeu!
       width: 100px;
       height: 12px;
     }
+  }
+
+  /* ========== MERCH POPUP ========== */
+  .merch-popup {
+    border: 3px solid #ff6600;
+  }
+
+  .merch-body {
+    background: linear-gradient(180deg, #fff 0%, #fffacd 100%);
+    padding: 16px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .merch-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff6600;
+    text-shadow: 1px 1px 0 #000;
+    margin: 0;
+  }
+
+  .merch-images {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .merch-img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border: 3px solid #ff6600;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .merch-subtitle {
+    font-size: 8px;
+    color: #666;
+    margin: 0;
+  }
+
+  .merch-btn {
+    background: linear-gradient(180deg, #ff6600 0%, #cc5500 100%);
+    color: #fff;
+    border: 2px outset #ff9933;
+    padding: 10px 20px;
+    font-size: 10px;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #000;
+    animation: merchPulse 1s ease-in-out infinite;
+  }
+
+  @keyframes merchPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); box-shadow: 0 0 15px #ffcc00; }
+  }
+
+  .merch-btn:hover {
+    background: linear-gradient(180deg, #ff9933 0%, #ff6600 100%);
+  }
+
+  .merch-btn:active {
+    border-style: inset;
+  }
+
+  /* Banana reveal */
+  .banana-reveal {
+    background: linear-gradient(180deg, #ffff00 0%, #ffcc00 100%) !important;
+    animation: bananaShake 0.5s ease-in-out;
+  }
+
+  @keyframes bananaShake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+  }
+
+  .banana-emoji {
+    font-size: 60px;
+    animation: bananaWiggle 0.5s ease-in-out infinite;
+  }
+
+  @keyframes bananaWiggle {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+  }
+
+  .banana-text {
+    font-size: 11px;
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    margin: 8px 0;
+  }
+
+  .banana-subtext {
+    font-size: 8px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .banana-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #000;
+    color: #ffcc00;
+    text-decoration: none;
+    font-size: 8px;
+    border: 2px outset #333;
+  }
+
+  .banana-link:hover {
+    background: #333;
+    color: #fff;
   }
 
   /* ========== R.I.P. POPUP ========== */
@@ -2628,5 +2753,95 @@ Valeu!
         payRespect();
       }
     }
+  });
+
+  // ========== SISTEMA MERCH - BANANA TROLL ==========
+  const merchBtn = document.getElementById('merchBtn');
+  const merchBody = document.getElementById('merchBody');
+  const weunweunSound = document.getElementById('weunweunSound') as HTMLAudioElement;
+  let bananaRevealed = false;
+
+  merchBtn?.addEventListener('click', () => {
+    if (bananaRevealed) return;
+    bananaRevealed = true;
+
+    // Tocar som (apenas uma vez)
+    if (weunweunSound) {
+      weunweunSound.currentTime = 0;
+      weunweunSound.play().catch(() => {
+        // Ignora erro se autoplay bloqueado
+      });
+    }
+
+    // Animação de shake no popup
+    const popup3El = document.getElementById('popup3');
+    if (popup3El) {
+      popup3El.style.animation = 'bananaShake 0.5s ease-in-out';
+    }
+
+    // Substituir conteúdo após pequeno delay
+    setTimeout(() => {
+      if (merchBody) {
+        merchBody.classList.add('banana-reveal');
+        merchBody.innerHTML = `
+          <div class="banana-emoji">🍌</div>
+          <p class="banana-text">Infelizmente você rodou na banana! 🍌</p>
+          <p class="banana-subtext">Só vendemos em nossos shows.<br>Vá no próximo!</p>
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="banana-link">
+            📅 Ver próximos shows
+          </a>
+        `;
+      }
+    }, 300);
+  });
+
+  // Reset quando popup3 é fechado (para funcionar novamente)
+  const popup3CloseBtn = document.querySelector('[data-popup-close="popup3"]');
+  popup3CloseBtn?.addEventListener('click', () => {
+    // Reset após fechar
+    setTimeout(() => {
+      bananaRevealed = false;
+      if (merchBody) {
+        merchBody.classList.remove('banana-reveal');
+        merchBody.innerHTML = `
+          <p class="merch-title">COMPRE NOSSO MERCH!!!</p>
+          <div class="merch-images">
+            <img src="/images/ades.png" alt="Adesivos Wallita" class="merch-img" />
+            <img src="/images/camis.png" alt="Camisetas Wallita" class="merch-img" />
+          </div>
+          <p class="merch-subtitle">Adesivos e Camisetas exclusivas!</p>
+          <button class="win95-btn merch-btn" id="merchBtn">
+            🛒 ADQUIRA AGORA! 🛒
+          </button>
+        `;
+        // Re-attach event listener ao novo botão
+        const newMerchBtn = document.getElementById('merchBtn');
+        newMerchBtn?.addEventListener('click', () => {
+          if (bananaRevealed) return;
+          bananaRevealed = true;
+          if (weunweunSound) {
+            weunweunSound.currentTime = 0;
+            weunweunSound.play().catch(() => {});
+          }
+          const popup3El = document.getElementById('popup3');
+          if (popup3El) {
+            popup3El.style.animation = 'bananaShake 0.5s ease-in-out';
+          }
+          setTimeout(() => {
+            if (merchBody) {
+              merchBody.classList.add('banana-reveal');
+              merchBody.innerHTML = `
+                <div class="banana-emoji">🍌</div>
+                <p class="banana-text">Infelizmente você rodou na banana! 🍌</p>
+                <p class="banana-subtext">Só vendemos em nossos shows.<br>Vá no próximo!</p>
+                <a href="https://www.instagram.com/wallitaband/" target="_blank" class="banana-link">
+                  📅 Ver próximos shows
+                </a>
+              `;
+            }
+          }, 300);
+        });
+      }
+    }, 500);
   });
 </script>
