@@ -240,20 +240,80 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={560} height={400} x={180} y={60}>
+    <Window id="win-videos" title="Videos - YouTube & Instagram" width={620} height={520} x={150} y={40}>
       <div class="videos-window-content">
-        <div class="youtube-embed">
-          <iframe
-            src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
-            title="Wallita"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
+        <!-- Seção YouTube - Destaque -->
+        <div class="video-section youtube-section">
+          <div class="section-header">
+            <span>🎬 LYRIC VIDEO</span>
+          </div>
+          <div class="youtube-embed" data-video-container>
+            <iframe
+              src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
+              title="Wallita - Lyric Video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
         </div>
+
+        <!-- Seção Instagram Reels -->
+        <div class="video-section instagram-section">
+          <div class="section-header">
+            <span>📱 REELS @wallitaband</span>
+          </div>
+          <div class="instagram-grid">
+            <!-- Reel 1 -->
+            <div class="instagram-video-wrapper" data-video-container>
+              <div class="instagram-thumb" data-reel="https://www.instagram.com/reel/DCuIBxRRlKB/">
+                <div class="thumb-overlay">
+                  <span class="play-icon">▶</span>
+                  <span class="instagram-icon">📷</span>
+                </div>
+                <div class="thumb-bg">REEL 1</div>
+              </div>
+            </div>
+            <!-- Reel 2 -->
+            <div class="instagram-video-wrapper" data-video-container>
+              <div class="instagram-thumb" data-reel="https://www.instagram.com/reel/DCZeWZgxf5E/">
+                <div class="thumb-overlay">
+                  <span class="play-icon">▶</span>
+                  <span class="instagram-icon">📷</span>
+                </div>
+                <div class="thumb-bg">REEL 2</div>
+              </div>
+            </div>
+            <!-- Reel 3 -->
+            <div class="instagram-video-wrapper" data-video-container>
+              <div class="instagram-thumb" data-reel="https://www.instagram.com/reel/DBbWlA9Rfl_/">
+                <div class="thumb-overlay">
+                  <span class="play-icon">▶</span>
+                  <span class="instagram-icon">📷</span>
+                </div>
+                <div class="thumb-bg">REEL 3</div>
+              </div>
+            </div>
+            <!-- Reel 4 -->
+            <div class="instagram-video-wrapper" data-video-container>
+              <div class="instagram-thumb" data-reel="https://www.instagram.com/reel/C_3F_UWR1uJ/">
+                <div class="thumb-overlay">
+                  <span class="play-icon">▶</span>
+                  <span class="instagram-icon">📷</span>
+                </div>
+                <div class="thumb-bg">REEL 4</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer com links -->
         <div class="video-footer">
           <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="win95-btn youtube-btn">
-            📺 Ver mais no YouTube
+            📺 YouTube
+          </a>
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="win95-btn instagram-btn-link">
+            📷 Instagram
           </a>
         </div>
       </div>
@@ -794,17 +854,20 @@ Valeu!
   }
 
   .video-footer {
-    padding: 10px;
+    padding: 8px;
     background: #c0c0c0;
     text-align: center;
     border-top: 2px groove #fff;
     flex-shrink: 0;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
   }
 
   .youtube-btn {
     display: inline-block;
-    padding: 8px 16px;
-    font-size: 9px;
+    padding: 6px 12px;
+    font-size: 8px;
     text-decoration: none;
     color: #000;
     background: #c0c0c0;
@@ -813,6 +876,140 @@ Valeu!
   .youtube-btn:hover {
     background: #ff0000;
     color: #fff;
+  }
+
+  .instagram-btn-link {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 8px;
+    text-decoration: none;
+    color: #000;
+    background: #c0c0c0;
+  }
+
+  .instagram-btn-link:hover {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: #fff;
+  }
+
+  /* Video sections */
+  .video-section {
+    margin-bottom: 8px;
+  }
+
+  .section-header {
+    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 8px;
+    margin-bottom: 4px;
+  }
+
+  .youtube-section .youtube-embed {
+    height: 180px;
+  }
+
+  /* Instagram grid */
+  .instagram-section {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .instagram-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 4px;
+    background: #1a1a1a;
+    max-height: 140px;
+    overflow-y: auto;
+  }
+
+  .instagram-video-wrapper {
+    aspect-ratio: 9/16;
+    max-height: 120px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .instagram-video-wrapper.expanded {
+    grid-column: span 2;
+    grid-row: span 2;
+    max-height: none;
+    z-index: 10;
+  }
+
+  .instagram-video-wrapper.collapsed {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+
+  .instagram-thumb {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 2px solid #333;
+    overflow: hidden;
+  }
+
+  .instagram-thumb:hover {
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  .thumb-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+  }
+
+  .play-icon {
+    font-size: 24px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  }
+
+  .instagram-icon {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .thumb-bg {
+    font-size: 8px;
+    color: #fff;
+    opacity: 0.5;
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+  }
+
+  /* Instagram embed iframe */
+  .instagram-video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .instagram-video-wrapper.has-embed {
+    aspect-ratio: auto;
+    max-height: none;
+    height: auto;
+  }
+
+  .instagram-video-wrapper.has-embed.expanded {
+    height: 280px;
   }
 
   /* Audio window layout */
@@ -1471,6 +1668,50 @@ Valeu!
     /* Video container mobile */
     .video-container iframe {
       height: 200px;
+    }
+
+    /* Instagram section mobile */
+    .section-header {
+      font-size: 6px;
+      padding: 3px 6px;
+    }
+
+    .youtube-section .youtube-embed {
+      height: 140px;
+    }
+
+    .instagram-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+      padding: 3px;
+      max-height: 120px;
+    }
+
+    .instagram-video-wrapper {
+      max-height: 100px;
+    }
+
+    .play-icon {
+      font-size: 18px;
+    }
+
+    .instagram-icon {
+      font-size: 10px;
+    }
+
+    .thumb-bg {
+      font-size: 6px;
+    }
+
+    .video-footer {
+      padding: 6px;
+      gap: 6px;
+    }
+
+    .youtube-btn,
+    .instagram-btn-link {
+      padding: 5px 10px;
+      font-size: 6px;
     }
 
     /* Notepad mobile */
@@ -2694,6 +2935,44 @@ Valeu!
       setTimeout(loadAgenda, 100);
     });
   }
+
+  // ========== SISTEMA DE VÍDEOS INSTAGRAM ==========
+  const instagramThumbs = document.querySelectorAll('.instagram-thumb[data-reel]');
+  const instagramWrappers = document.querySelectorAll('.instagram-video-wrapper');
+
+  instagramThumbs.forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      const reelUrl = (thumb as HTMLElement).dataset.reel;
+      if (reelUrl) {
+        // Abrir reel no Instagram em nova aba
+        window.open(reelUrl, '_blank');
+      }
+    });
+  });
+
+  // Efeito de hover expandido nos wrappers
+  instagramWrappers.forEach(wrapper => {
+    wrapper.addEventListener('mouseenter', () => {
+      // Expandir este, colapsar outros
+      instagramWrappers.forEach(w => {
+        if (w === wrapper) {
+          w.classList.add('expanded');
+          w.classList.remove('collapsed');
+        } else {
+          w.classList.add('collapsed');
+          w.classList.remove('expanded');
+        }
+      });
+    });
+  });
+
+  // Resetar ao sair do grid
+  const instagramGrid = document.querySelector('.instagram-grid');
+  instagramGrid?.addEventListener('mouseleave', () => {
+    instagramWrappers.forEach(w => {
+      w.classList.remove('expanded', 'collapsed');
+    });
+  });
 
   // ========== SISTEMA DE DESENHO ==========
   const drawBtn = document.getElementById('drawBtn');
