@@ -448,21 +448,22 @@ Valeu!
         </div>
       </div>
 
-      <!-- Popup 5 - CONTA DELETADA -->
-      <div class="virus-popup" id="popup5" data-popup-draggable style="left: 350px; top: 200px; display: none;">
-        <div class="popup-title" data-popup-drag-handle>
-          <span>Microsoft Security</span>
+      <!-- Popup 5 - R.I.P. / In Memoriam -->
+      <div class="virus-popup rip-popup" id="popup5" data-popup-draggable style="left: 350px; top: 150px; display: none; width: 320px;">
+        <div class="popup-title" data-popup-drag-handle style="background: linear-gradient(90deg, #1a1a1a, #333, #1a1a1a);">
+          <span>💀 R.I.P. - In Memoriam 💀</span>
           <button class="popup-close" data-popup-close="popup5">X</button>
         </div>
-        <div class="popup-body">
-          <p style="font-size: 24px; margin-bottom: 8px;">⚠️</p>
-          <p>Sua conta sera DELETADA em 24h!</p>
-          <p style="font-size: 8px; margin-top: 4px;">Clique para verificar identidade</p>
-          <a href="https://open.spotify.com/intl-pt/artist/2KPeAwg1B1P3WROMy9JdQk" target="_blank" class="win95-btn popup-btn" style="text-decoration: none; display: inline-block;">
-            VERIFICAR
-          </a>
+        <div class="popup-body rip-body">
+          <img src="/images/fmargarida.jpg" alt="In Memoriam" class="rip-image" />
+          <button class="win95-btn rip-btn" id="ripBtn">
+            Press F to pay respect
+          </button>
         </div>
       </div>
+
+      <!-- Container para emojis chorando -->
+      <div class="crying-emojis-container" id="cryingEmojisContainer"></div>
 
       <!-- Popup 6 - OFERTA IMPERDÍVEL -->
       <div class="virus-popup" id="popup6" data-popup-draggable style="left: 600px; top: 350px; display: none; width: auto; max-width: 400px;">
@@ -1404,6 +1405,115 @@ Valeu!
     .loading-bar {
       width: 100px;
       height: 12px;
+    }
+  }
+
+  /* ========== R.I.P. POPUP ========== */
+  .rip-popup {
+    border: 3px solid #333;
+  }
+
+  .rip-body {
+    background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+    padding: 16px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rip-image {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    border: 4px solid #444;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  }
+
+  .rip-btn {
+    background: linear-gradient(180deg, #444 0%, #222 100%);
+    color: #fff;
+    border: 2px outset #666;
+    padding: 10px 20px;
+    font-size: 9px;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #000;
+  }
+
+  .rip-btn:hover {
+    background: linear-gradient(180deg, #555 0%, #333 100%);
+  }
+
+  .rip-btn:active {
+    border-style: inset;
+  }
+
+  /* Container de emojis chorando */
+  .crying-emojis-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+    overflow: hidden;
+  }
+
+  .crying-emoji {
+    position: absolute;
+    font-size: 40px;
+    animation: emojiFloat 3s ease-out forwards;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    text-shadow: 0 0 20px #fff, 0 0 30px #00bfff, 0 0 40px #00bfff;
+  }
+
+  @keyframes emojiFloat {
+    0% {
+      transform: translateY(0) scale(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      transform: translateY(-20px) scale(1.2) rotate(10deg);
+      opacity: 1;
+    }
+    30% {
+      transform: translateY(-60px) scale(1) rotate(-10deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) scale(0.5) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .crying-emoji.sparkle {
+    animation: emojiSparkle 2.5s ease-out forwards;
+  }
+
+  @keyframes emojiSparkle {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 0;
+      filter: drop-shadow(0 0 5px #fff);
+    }
+    20% {
+      transform: scale(1.5) rotate(15deg);
+      opacity: 1;
+      filter: drop-shadow(0 0 20px #ff69b4) drop-shadow(0 0 40px #00bfff);
+    }
+    40% {
+      transform: scale(1) rotate(-10deg);
+      filter: drop-shadow(0 0 30px #ffff00) drop-shadow(0 0 50px #ff00ff);
+    }
+    60% {
+      transform: scale(1.2) rotate(5deg);
+      filter: drop-shadow(0 0 25px #00ff00) drop-shadow(0 0 45px #00bfff);
+    }
+    100% {
+      transform: scale(0) rotate(360deg);
+      opacity: 0;
+      filter: drop-shadow(0 0 0 transparent);
     }
   }
 
@@ -2449,6 +2559,74 @@ Valeu!
   window.addEventListener('resize', () => {
     if (isDrawingMode) {
       initCanvas();
+    }
+  });
+
+  // ========== SISTEMA R.I.P. - PRESS F TO PAY RESPECT ==========
+  const ripBtn = document.getElementById('ripBtn');
+  const popup5Element = document.getElementById('popup5');
+  const cryingContainer = document.getElementById('cryingEmojisContainer');
+
+  const cryingEmojis = ['😭', '😢', '💔', '🥺', '😿', '💧', '🖤', '⚰️'];
+  let isPayingRespect = false;
+
+  function payRespect() {
+    if (isPayingRespect) return;
+    isPayingRespect = true;
+
+    // Limpar container
+    if (cryingContainer) {
+      cryingContainer.innerHTML = '';
+    }
+
+    // Criar muitos emojis
+    const emojiCount = 30;
+    for (let i = 0; i < emojiCount; i++) {
+      setTimeout(() => {
+        createCryingEmoji();
+      }, i * 80);
+    }
+
+    // Reset após animação
+    setTimeout(() => {
+      isPayingRespect = false;
+    }, 3500);
+  }
+
+  function createCryingEmoji() {
+    if (!cryingContainer) return;
+
+    const emoji = document.createElement('div');
+    emoji.className = 'crying-emoji' + (Math.random() > 0.5 ? ' sparkle' : '');
+    emoji.textContent = cryingEmojis[Math.floor(Math.random() * cryingEmojis.length)];
+
+    // Posição aleatória
+    emoji.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+    emoji.style.top = Math.random() * (window.innerHeight * 0.6) + 'px';
+    emoji.style.fontSize = (30 + Math.random() * 30) + 'px';
+    emoji.style.animationDelay = (Math.random() * 0.3) + 's';
+    emoji.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+
+    cryingContainer.appendChild(emoji);
+
+    // Remover depois da animação
+    setTimeout(() => {
+      emoji.remove();
+    }, 4000);
+  }
+
+  // Click no botão
+  ripBtn?.addEventListener('click', () => {
+    payRespect();
+  });
+
+  // Tecla F (apenas quando popup5 está visível)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'f' || e.key === 'F') {
+      // Verificar se popup5 está visível
+      if (popup5Element && popup5Element.style.display !== 'none' && popup5Element.style.display !== '') {
+        payRespect();
+      }
     }
   });
 </script>
