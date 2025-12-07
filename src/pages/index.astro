@@ -258,19 +258,21 @@ const photos = [
           </div>
         </div>
 
-        <!-- Seção Instagram - Embed do Perfil -->
+        <!-- Seção Instagram - Embed dos Posts -->
         <div class="video-section instagram-embed-section">
           <div class="section-header instagram-section-header">
             <span>📱 @WALLITABAND</span>
           </div>
           <div class="instagram-embed-container">
-            <iframe
-              src="https://www.instagram.com/wallitaband/embed"
-              class="instagram-embed-iframe"
-              frameborder="0"
-              scrolling="yes"
-              allowtransparency="true">
-            </iframe>
+            <div class="instagram-embed-wrapper">
+              <iframe
+                src="https://www.instagram.com/wallitaband/embed"
+                class="instagram-embed-iframe"
+                frameborder="0"
+                scrolling="no"
+                allowtransparency="true">
+              </iframe>
+            </div>
             <!-- Fallback se o embed não carregar -->
             <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-fallback-btn">
               <span>📱 Abrir Instagram @wallitaband</span>
@@ -278,15 +280,11 @@ const photos = [
           </div>
         </div>
 
-        <!-- Footer com botões -->
+        <!-- Footer com botão YouTube -->
         <div class="video-footer-buttons">
           <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn youtube-big-btn">
             <span class="btn-icon">📺</span>
-            <span class="btn-text">YouTube</span>
-          </a>
-          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn instagram-big-btn">
-            <span class="btn-icon">📱</span>
-            <span class="btn-text">Instagram</span>
+            <span class="btn-text">Inscreva-se no YouTube</span>
           </a>
         </div>
       </div>
@@ -857,19 +855,36 @@ Valeu!
 
   .instagram-embed-container {
     flex: 1;
-    min-height: 120px;
+    min-height: 0;
     background: #fafafa;
     position: relative;
     display: flex;
     flex-direction: column;
   }
 
-  .instagram-embed-iframe {
-    width: 100%;
+  /* Wrapper para cortar o header do Instagram */
+  .instagram-embed-wrapper {
+    overflow: hidden;
+    position: relative;
+    height: 180px;
     flex: 1;
-    min-height: 120px;
+  }
+
+  .instagram-embed-iframe {
+    position: absolute;
+    top: -280px; /* Esconde o header do perfil */
+    left: 0;
+    width: 100%;
+    height: 500px;
     border: none;
     background: #fff;
+    /* Esconde scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  .instagram-embed-iframe::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
   }
 
   .instagram-fallback-btn {
@@ -940,16 +955,6 @@ Valeu!
 
   .youtube-big-btn:hover {
     background: linear-gradient(180deg, #ff6666 0%, #ee0000 100%);
-  }
-
-  .instagram-big-btn {
-    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  }
-
-  .instagram-big-btn:hover {
-    background: linear-gradient(135deg, #9c4dc4, #fe3e3e, #fdc255);
   }
 
   /* Audio window layout */
@@ -1621,11 +1626,16 @@ Valeu!
     }
 
     .instagram-embed-container {
-      min-height: 100px;
+      min-height: 80px;
+    }
+
+    .instagram-embed-wrapper {
+      height: 140px;
     }
 
     .instagram-embed-iframe {
-      min-height: 100px;
+      top: -260px;
+      height: 450px;
     }
 
     .instagram-fallback-btn {
