@@ -240,7 +240,7 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={520} height={480} x={160} y={40}>
+    <Window id="win-videos" title="Videos" width={480} height={420} x={160} y={40}>
       <div class="videos-window-content">
         <!-- Seção YouTube - Destaque -->
         <div class="video-section youtube-section">
@@ -258,24 +258,38 @@ const photos = [
           </div>
         </div>
 
-        <!-- Seção Instagram - Embed dos Posts -->
-        <div class="video-section instagram-embed-section">
+        <!-- Seção Instagram - Thumbnails clicáveis -->
+        <div class="video-section instagram-section">
           <div class="section-header instagram-section-header">
             <span>📱 @WALLITABAND</span>
           </div>
-          <div class="instagram-embed-container">
-            <div class="instagram-embed-wrapper">
-              <iframe
-                src="https://www.instagram.com/wallitaband/embed"
-                class="instagram-embed-iframe"
-                frameborder="0"
-                scrolling="no"
-                allowtransparency="true">
-              </iframe>
-            </div>
-            <!-- Fallback se o embed não carregar -->
-            <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-fallback-btn">
-              <span>📱 Abrir Instagram @wallitaband</span>
+          <div class="instagram-grid">
+            <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-thumb">
+              <div class="thumb-placeholder">
+                <span class="thumb-icon">🎸</span>
+                <span class="thumb-text">POST 1</span>
+              </div>
+              <div class="thumb-overlay">
+                <span>▶ Ver no Instagram</span>
+              </div>
+            </a>
+            <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-thumb">
+              <div class="thumb-placeholder">
+                <span class="thumb-icon">🎤</span>
+                <span class="thumb-text">POST 2</span>
+              </div>
+              <div class="thumb-overlay">
+                <span>▶ Ver no Instagram</span>
+              </div>
+            </a>
+            <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-thumb">
+              <div class="thumb-placeholder">
+                <span class="thumb-icon">🥁</span>
+                <span class="thumb-text">POST 3</span>
+              </div>
+              <div class="thumb-overlay">
+                <span>▶ Ver no Instagram</span>
+              </div>
             </a>
           </div>
         </div>
@@ -843,8 +857,8 @@ Valeu!
     height: 180px;
   }
 
-  /* Instagram embed section */
-  .instagram-embed-section {
+  /* Instagram section - Grid de thumbnails */
+  .instagram-section {
     flex: 1;
     min-height: 0;
     display: flex;
@@ -855,53 +869,69 @@ Valeu!
     background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
   }
 
-  .instagram-embed-container {
+  .instagram-grid {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: #1a1a1a;
     flex: 1;
-    min-height: 0;
-    background: #fafafa;
+  }
+
+  .instagram-thumb {
+    flex: 1;
     position: relative;
     display: flex;
-    flex-direction: column;
-  }
-
-  /* Wrapper para cortar o header e mostrar só 3 posts */
-  .instagram-embed-wrapper {
+    text-decoration: none;
     overflow: hidden;
-    position: relative;
-    height: 160px; /* Altura para 1 linha de 3 posts */
+    aspect-ratio: 1;
+    min-height: 100px;
   }
 
-  .instagram-embed-iframe {
+  .thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .thumb-icon {
+    font-size: 28px;
+  }
+
+  .thumb-text {
+    font-size: 8px;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .thumb-overlay {
     position: absolute;
-    top: -340px; /* Esconde header do perfil */
+    top: 0;
     left: 0;
     width: 100%;
-    height: 600px;
-    border: none;
-    background: #fff;
-    /* Esconde scrollbar */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
 
-  .instagram-embed-iframe::-webkit-scrollbar {
-    display: none; /* Chrome/Safari/Opera */
-  }
-
-  .instagram-fallback-btn {
-    display: block;
-    padding: 8px 12px;
-    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+  .thumb-overlay span {
     color: #fff;
-    text-align: center;
-    text-decoration: none;
     font-size: 9px;
     font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    text-align: center;
   }
 
-  .instagram-fallback-btn:hover {
-    background: linear-gradient(135deg, #9c4dc4, #fe3e3e, #fdc255);
+  .instagram-thumb:hover .thumb-overlay {
+    opacity: 1;
   }
 
   /* Video footer buttons - 2 botões lado a lado */
@@ -1621,21 +1651,24 @@ Valeu!
       height: 120px;
     }
 
-    .instagram-embed-container {
-      min-height: 80px;
+    .instagram-grid {
+      gap: 2px;
+      padding: 2px;
     }
 
-    .instagram-embed-wrapper {
-      height: 120px;
+    .instagram-thumb {
+      min-height: 70px;
     }
 
-    .instagram-embed-iframe {
-      top: -320px;
-      height: 550px;
+    .thumb-icon {
+      font-size: 18px;
     }
 
-    .instagram-fallback-btn {
-      padding: 4px 8px;
+    .thumb-text {
+      font-size: 6px;
+    }
+
+    .thumb-overlay span {
       font-size: 7px;
     }
 
