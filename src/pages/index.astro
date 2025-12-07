@@ -240,7 +240,7 @@ const photos = [
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={500} height={420} x={180} y={60}>
+    <Window id="win-videos" title="Videos" width={480} height={340} x={180} y={60}>
       <div class="videos-window-content">
         <!-- Seção YouTube - Destaque -->
         <div class="video-section youtube-section">
@@ -258,43 +258,15 @@ const photos = [
           </div>
         </div>
 
-        <!-- Seção Instagram - Thumbnails estilizados -->
-        <div class="video-section instagram-promo">
-          <div class="section-header instagram-header">
-            <span>📱 SIGA NO INSTAGRAM</span>
-          </div>
-          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-promo-link">
-            <div class="instagram-thumbs-row">
-              <div class="insta-thumb">
-                <div class="insta-thumb-inner">
-                  <span class="insta-play">▶</span>
-                </div>
-              </div>
-              <div class="insta-thumb">
-                <div class="insta-thumb-inner">
-                  <span class="insta-play">▶</span>
-                </div>
-              </div>
-              <div class="insta-thumb">
-                <div class="insta-thumb-inner">
-                  <span class="insta-play">▶</span>
-                </div>
-              </div>
-            </div>
-            <div class="instagram-cta">
-              <span class="instagram-handle">@wallitaband</span>
-              <span class="instagram-arrow">→</span>
-            </div>
+        <!-- Footer com botões -->
+        <div class="video-footer-buttons">
+          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn youtube-big-btn">
+            <span class="btn-icon">📺</span>
+            <span class="btn-text">Ver mais no YouTube</span>
           </a>
-        </div>
-
-        <!-- Footer com links -->
-        <div class="video-footer">
-          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="win95-btn youtube-btn">
-            📺 YouTube
-          </a>
-          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="win95-btn instagram-btn-link">
-            📷 Instagram
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn instagram-big-btn">
+            <span class="btn-icon">📱</span>
+            <span class="btn-text">Ver vídeos no Instagram</span>
           </a>
         </div>
       </div>
@@ -834,45 +806,6 @@ Valeu!
     height: 100%;
   }
 
-  .video-footer {
-    padding: 8px;
-    background: #c0c0c0;
-    text-align: center;
-    border-top: 2px groove #fff;
-    flex-shrink: 0;
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-  }
-
-  .youtube-btn {
-    display: inline-block;
-    padding: 6px 12px;
-    font-size: 8px;
-    text-decoration: none;
-    color: #000;
-    background: #c0c0c0;
-  }
-
-  .youtube-btn:hover {
-    background: #ff0000;
-    color: #fff;
-  }
-
-  .instagram-btn-link {
-    display: inline-block;
-    padding: 6px 12px;
-    font-size: 8px;
-    text-decoration: none;
-    color: #000;
-    background: #c0c0c0;
-  }
-
-  .instagram-btn-link:hover {
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-    color: #fff;
-  }
-
   /* Video sections */
   .video-section {
     margin-bottom: 8px;
@@ -886,94 +819,72 @@ Valeu!
     margin-bottom: 4px;
   }
 
-  .instagram-header {
-    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-  }
-
   .youtube-section .youtube-embed {
     height: 200px;
   }
 
-  /* Instagram promo section */
-  .instagram-promo {
-    background: #1a1a1a;
-    padding: 8px;
-  }
-
-  .instagram-promo-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .instagram-promo-link:hover .insta-thumb {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-  }
-
-  .instagram-thumbs-row {
+  /* Video footer buttons */
+  .video-footer-buttons {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: #c0c0c0;
+    border-top: 2px groove #fff;
+  }
+
+  .video-btn {
+    display: flex;
+    align-items: center;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .insta-thumb {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
-    border: 2px solid #444;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: bold;
     cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow:
+      inset -1px -1px 0 var(--window-border-darker),
+      inset 1px 1px 0 var(--window-border-light),
+      inset -2px -2px 0 var(--window-border-dark),
+      inset 2px 2px 0 var(--white);
   }
 
-  .insta-thumb-inner {
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .video-btn:active {
+    box-shadow:
+      inset 1px 1px 0 var(--window-border-darker),
+      inset -1px -1px 0 var(--window-border-light),
+      inset 2px 2px 0 var(--window-border-dark),
+      inset -2px -2px 0 var(--white);
   }
 
-  .insta-play {
-    font-size: 28px;
+  .btn-icon {
+    font-size: 18px;
+  }
+
+  .btn-text {
+    font-family: 'Press Start 2P', cursive;
+  }
+
+  .youtube-big-btn {
+    background: linear-gradient(180deg, #ff4444 0%, #cc0000 100%);
     color: #fff;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-    opacity: 0.9;
-  }
-
-  .instagram-cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 6px;
-    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
-    color: #fff;
-    font-size: 10px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   }
 
-  .instagram-handle {
-    font-weight: bold;
+  .youtube-big-btn:hover {
+    background: linear-gradient(180deg, #ff6666 0%, #ee0000 100%);
   }
 
-  .instagram-arrow {
-    font-size: 14px;
-    animation: arrowBounce 1s ease-in-out infinite;
+  .instagram-big-btn {
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   }
 
-  @keyframes arrowBounce {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(5px); }
-  }
-
-  .instagram-promo-link:hover .instagram-cta {
-    background: linear-gradient(90deg, #9c4dc4, #fe3e3e, #fdc255);
+  .instagram-big-btn:hover {
+    background: linear-gradient(135deg, #9c4dc4, #fe3e3e, #fdc255);
   }
 
   /* Audio window layout */
@@ -1644,43 +1555,19 @@ Valeu!
       height: 140px;
     }
 
-    .instagram-promo {
+    .video-footer-buttons {
       padding: 6px;
-    }
-
-    .instagram-thumbs-row {
       gap: 6px;
-      margin-bottom: 6px;
     }
 
-    .insta-thumb {
-      width: 60px;
-      height: 60px;
-    }
-
-    .insta-play {
-      font-size: 20px;
-    }
-
-    .instagram-cta {
-      padding: 4px;
+    .video-btn {
+      padding: 8px 12px;
       font-size: 8px;
       gap: 6px;
     }
 
-    .instagram-arrow {
-      font-size: 12px;
-    }
-
-    .video-footer {
-      padding: 6px;
-      gap: 6px;
-    }
-
-    .youtube-btn,
-    .instagram-btn-link {
-      padding: 5px 10px;
-      font-size: 6px;
+    .btn-icon {
+      font-size: 14px;
     }
 
     /* Notepad mobile */
