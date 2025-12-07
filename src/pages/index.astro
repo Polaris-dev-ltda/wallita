@@ -1901,7 +1901,7 @@ Valeu!
     ]);
   }
 
-  // Carregar agenda do Google Sheets - SEMPRE busca dados novos
+  // Carregar agenda do Google Sheets - SEMPRE busca dados novos (sem cache)
   async function loadAgenda() {
     // Evita múltiplas requisições simultâneas
     if (isLoadingAgenda) return;
@@ -1917,16 +1917,30 @@ Valeu!
     showAgendaLoading();
 
     try {
-      // Cache busting com timestamp
-      const timestamp = Date.now();
-      const urlWithCache = `${GOOGLE_SHEETS_URL}&t=${timestamp}`;
+      // Cache busting FORTE: timestamp + random
+      const nocache = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      const sheetUrl = `${GOOGLE_SHEETS_URL}&nocache=${nocache}`;
 
-      // Usa proxy CORS
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(urlWithCache)}`;
+      // Usa corsproxy.io (não cacheia como allorigins)
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(sheetUrl)}`;
 
-      console.log('Carregando agenda do Google Sheets...');
+      console.log('Carregando agenda (nocache=' + nocache + ')...');
 
-      const response = await fetchWithTimeout(proxyUrl, FETCH_TIMEOUT);
+      // Fetch com headers anti-cache
+      const response = await Promise.race([
+        fetch(proxyUrl, {
+          method: 'GET',
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        }),
+        new Promise<Response>((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout')), FETCH_TIMEOUT)
+        )
+      ]);
 
       if (response.ok) {
         const csv = await response.text();
@@ -1943,7 +1957,7 @@ Valeu!
           renderAgenda(FALLBACK_SHOWS);
         }
       } else {
-        throw new Error('Resposta não OK');
+        throw new Error('Resposta não OK: ' + response.status);
       }
     } catch (error) {
       console.warn('Erro ao carregar agenda, usando fallback:', error);
