@@ -61,41 +61,39 @@ const availableWallpapers = [
       <button class="menu-close-btn" id="menuCloseBtn">X</button>
     </div>
     <div class="wallpaper-menu-content" id="wallpaperMenuContent">
-      <!-- Conteúdo será preenchido dinamicamente pelo JS -->
+      <!-- 1. Opção Padrão (sempre primeiro) -->
+      <div class="wallpaper-option wallpaper-fixed" data-wallpaper="default" data-order="0">
+        <div class="wallpaper-thumb default-thumb">
+          <svg viewBox="0 0 40 30" width="100%" height="100%">
+            <rect width="40" height="30" fill="#0d0d0d"/>
+            <text x="20" y="18" text-anchor="middle" fill="#6bb90e" font-size="6" font-family="monospace">PADRÃO</text>
+          </svg>
+        </div>
+        <span class="wallpaper-name">Padrão</span>
+      </div>
+
+      <!-- 2. Opção Customizar (sempre segundo) -->
+      <div class="wallpaper-option wallpaper-fixed" id="customWallpaperOption" data-order="1">
+        <div class="wallpaper-thumb custom-thumb">
+          <svg viewBox="0 0 40 30" width="100%" height="100%">
+            <rect width="40" height="30" fill="#4a8c0a" stroke="#6bb90e" stroke-width="1"/>
+            <text x="20" y="12" text-anchor="middle" fill="#fff" font-size="5" font-family="monospace">ESCOLHER</text>
+            <text x="20" y="20" text-anchor="middle" fill="#fff" font-size="5" font-family="monospace">ARQUIVO</text>
+            <text x="20" y="26" text-anchor="middle" fill="#ffcc00" font-size="6">+</text>
+          </svg>
+        </div>
+        <span class="wallpaper-name">Customizar...</span>
+      </div>
+
+      <!-- 3. Imagens embaralháveis -->
+      {availableWallpapers.map((wp) => (
+        <div class="wallpaper-option wallpaper-shuffleable" data-wallpaper={wp.src}>
+          <img class="wallpaper-thumb" src={wp.src} alt={wp.name} loading="lazy" />
+          <span class="wallpaper-name">{wp.name}</span>
+        </div>
+      ))}
     </div>
   </div>
-
-  <!-- Template das opções fixas (oculto) -->
-  <template id="wallpaperFixedOptions">
-    <!-- 1. Opção Padrão (sempre primeiro) -->
-    <div class="wallpaper-option" data-wallpaper="default">
-      <div class="wallpaper-thumb default-thumb">
-        <svg viewBox="0 0 40 30" width="100%" height="100%">
-          <rect width="40" height="30" fill="#0d0d0d"/>
-          <text x="20" y="18" text-anchor="middle" fill="#6bb90e" font-size="6" font-family="monospace">PADRÃO</text>
-        </svg>
-      </div>
-      <span class="wallpaper-name">Padrão</span>
-    </div>
-
-    <!-- 2. Opção Customizar (sempre segundo) -->
-    <div class="wallpaper-option" id="customWallpaperOptionTemplate">
-      <div class="wallpaper-thumb custom-thumb">
-        <svg viewBox="0 0 40 30" width="100%" height="100%">
-          <rect width="40" height="30" fill="#4a8c0a" stroke="#6bb90e" stroke-width="1"/>
-          <text x="20" y="12" text-anchor="middle" fill="#fff" font-size="5" font-family="monospace">ESCOLHER</text>
-          <text x="20" y="20" text-anchor="middle" fill="#fff" font-size="5" font-family="monospace">ARQUIVO</text>
-          <text x="20" y="26" text-anchor="middle" fill="#ffcc00" font-size="6">+</text>
-        </svg>
-      </div>
-      <span class="wallpaper-name">Customizar...</span>
-    </div>
-  </template>
-
-  <!-- Dados dos wallpapers para o JS -->
-  <script id="wallpaperData" type="application/json">
-    {JSON.stringify(availableWallpapers)}
-  </script>
 
   <div class="taskbar-tray">
     <span class="tray-time" id="trayTime">00:00</span>
@@ -530,79 +528,44 @@ const availableWallpapers = [
   const wallpaperMenuContent = document.getElementById('wallpaperMenuContent');
   const menuCloseBtn = document.getElementById('menuCloseBtn');
   const wallpaperInput = document.getElementById('wallpaperInput') as HTMLInputElement;
-  const fixedOptionsTemplate = document.getElementById('wallpaperFixedOptions') as HTMLTemplateElement;
-  const wallpaperDataScript = document.getElementById('wallpaperData');
+  const customWallpaperOption = document.getElementById('customWallpaperOption');
 
-  // Carregar dados dos wallpapers
-  let wallpapersList: Array<{name: string, src: string}> = [];
-  if (wallpaperDataScript) {
-    try {
-      wallpapersList = JSON.parse(wallpaperDataScript.textContent || '[]');
-    } catch (e) {
-      console.error('Erro ao carregar wallpapers:', e);
-    }
-  }
+  // Função para embaralhar elementos no DOM
+  function shuffleWallpaperOptions() {
+    if (!wallpaperMenuContent) return;
 
-  // Função para embaralhar array (Fisher-Yates shuffle)
-  function shuffleArray<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
+    // Pegar todos os elementos embaralháveis
+    const shuffleableItems = Array.from(wallpaperMenuContent.querySelectorAll('.wallpaper-shuffleable'));
+
+    // Fisher-Yates shuffle
+    for (let i = shuffleableItems.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      [shuffleableItems[i], shuffleableItems[j]] = [shuffleableItems[j], shuffleableItems[i]];
     }
-    return shuffled;
-  }
 
-  // Função para renderizar o menu com imagens embaralhadas
-  function renderWallpaperMenu() {
-    if (!wallpaperMenuContent || !fixedOptionsTemplate) return;
-
-    // Limpar conteúdo atual
-    wallpaperMenuContent.innerHTML = '';
-
-    // 1. Adicionar opções fixas (Padrão e Customizar)
-    const fixedContent = fixedOptionsTemplate.content.cloneNode(true);
-    wallpaperMenuContent.appendChild(fixedContent);
-
-    // 2. Embaralhar e adicionar as imagens
-    const shuffledWallpapers = shuffleArray(wallpapersList);
-
-    shuffledWallpapers.forEach(wp => {
-      const option = document.createElement('div');
-      option.className = 'wallpaper-option';
-      option.dataset.wallpaper = wp.src;
-      option.innerHTML = `
-        <img class="wallpaper-thumb" src="${wp.src}" alt="${wp.name}" loading="lazy" />
-        <span class="wallpaper-name">${wp.name}</span>
-      `;
-      wallpaperMenuContent.appendChild(option);
-    });
-
-    // Re-attach event listeners
-    attachWallpaperListeners();
-  }
-
-  // Função para anexar event listeners às opções
-  function attachWallpaperListeners() {
-    // Clique nas opções de wallpaper
-    document.querySelectorAll('.wallpaper-option[data-wallpaper]').forEach(option => {
-      option.addEventListener('click', () => {
-        const wallpaperSrc = (option as HTMLElement).dataset.wallpaper;
-        if (wallpaperSrc === 'default') {
-          removeCustomWallpaper();
-        } else if (wallpaperSrc) {
-          applyWallpaper(wallpaperSrc);
-        }
-        if (wallpaperMenu) wallpaperMenu.style.display = 'none';
-      });
-    });
-
-    // Opção customizar
-    const customOption = document.getElementById('customWallpaperOptionTemplate');
-    customOption?.addEventListener('click', () => {
-      wallpaperInput?.click();
+    // Re-inserir os elementos embaralhados (após os fixos)
+    shuffleableItems.forEach(item => {
+      wallpaperMenuContent.appendChild(item);
     });
   }
+
+  // Clique nas opções de wallpaper
+  document.querySelectorAll('.wallpaper-option[data-wallpaper]').forEach(option => {
+    option.addEventListener('click', () => {
+      const wallpaperSrc = (option as HTMLElement).dataset.wallpaper;
+      if (wallpaperSrc === 'default') {
+        removeCustomWallpaper();
+      } else if (wallpaperSrc) {
+        applyWallpaper(wallpaperSrc);
+      }
+      if (wallpaperMenu) wallpaperMenu.style.display = 'none';
+    });
+  });
+
+  // Opção customizar
+  customWallpaperOption?.addEventListener('click', () => {
+    wallpaperInput?.click();
+  });
 
   // Toggle menu - EMBARALHA cada vez que abre
   wallpaperBtn?.addEventListener('click', (e) => {
@@ -610,8 +573,8 @@ const availableWallpapers = [
     if (wallpaperMenu) {
       const isHidden = wallpaperMenu.style.display === 'none';
       if (isHidden) {
-        // Renderizar menu com imagens embaralhadas
-        renderWallpaperMenu();
+        // Embaralhar as imagens
+        shuffleWallpaperOptions();
       }
       wallpaperMenu.style.display = isHidden ? 'block' : 'none';
     }
