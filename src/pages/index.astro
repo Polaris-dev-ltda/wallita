@@ -453,7 +453,7 @@ Valeu!
           <button class="popup-close" data-popup-close="popup6">X</button>
         </div>
         <div class="popup-body" style="padding: 0; background: #000;">
-          <img src="/images/popwalli.jpeg" alt="Oferta" style="display: block; width: 100%; height: auto; max-width: 400px;" />
+          <img id="popwalliImg" src="/images/popwalli.jpeg" alt="Oferta" style="display: block; width: 100%; height: auto; max-width: 400px; cursor: pointer;" />
         </div>
       </div>
     </div>
@@ -846,6 +846,22 @@ Valeu!
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-5px) rotate(-1deg); }
     75% { transform: translateX(5px) rotate(1deg); }
+  }
+
+  @keyframes popupFlyAway {
+    0% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(150vw, -150vh) rotate(1440deg) scale(0.1);
+      opacity: 0;
+    }
+  }
+
+  .popup-fly-away {
+    animation: popupFlyAway 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important;
+    pointer-events: none !important;
   }
 
   .popup-title {
@@ -1666,6 +1682,25 @@ Valeu!
         fogosAudio.pause();
         fogosAudio.currentTime = 0;
       }
+    });
+  }
+
+  // Clique na imagem do popup "OFERTA IMPERDÍVEL" - voa e gira pra fora
+  const popwalliImg = document.getElementById('popwalliImg');
+  const popup6 = document.getElementById('popup6');
+
+  if (popwalliImg && popup6) {
+    popwalliImg.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      // Adiciona classe de animação
+      popup6.classList.add('popup-fly-away');
+
+      // Após animação terminar (1.5s), esconde o popup
+      setTimeout(() => {
+        popup6.style.display = 'none';
+        popup6.classList.remove('popup-fly-away');
+      }, 1500);
     });
   }
 
