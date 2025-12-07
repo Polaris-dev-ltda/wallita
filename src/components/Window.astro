@@ -136,4 +136,32 @@ const { id, title, width = 400, height = 300, x = 100, y = 50, isPopup = false }
     color: var(--neon-green);
     background: var(--title-bar);
   }
+
+  /* Mobile responsive */
+  @media screen and (max-width: 768px) {
+    .window {
+      max-width: 95vw !important;
+      max-height: 80vh !important;
+      width: auto !important;
+    }
+
+    .title-bar {
+      padding: 6px 8px;
+    }
+
+    .title-text {
+      font-size: 7px;
+    }
+
+    .title-btn {
+      width: 28px;
+      height: 28px;
+      font-size: 10px;
+    }
+
+    .window-content {
+      padding: 6px;
+      font-size: 8px;
+    }
+  }
 </style>

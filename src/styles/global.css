@@ -120,3 +120,26 @@ body {
     -4px 0 0 0 var(--neon-green),
     4px 0 0 0 var(--neon-green);
 }
+
+/* ========== MOBILE RESPONSIVE ========== */
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 10px;
+    cursor: auto; /* Cursor normal no mobile */
+  }
+
+  .win95-btn {
+    padding: 6px 10px;
+    font-size: 7px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Desabilitar scanlines no mobile para performance */
+  .scanlines::after {
+    display: none;
+  }
+}

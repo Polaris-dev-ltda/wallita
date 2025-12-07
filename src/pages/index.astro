@@ -882,6 +882,107 @@ Valeu!
   .rainbow-text {
     animation: rainbowText 1s linear infinite;
   }
+
+  /* ========== MOBILE RESPONSIVE ========== */
+  @media screen and (max-width: 768px) {
+    .desktop {
+      height: calc(100vh - 36px);
+      overflow: hidden;
+    }
+
+    .bg-album {
+      width: 180px;
+      right: 20px;
+      bottom: 40px;
+      opacity: 0.15;
+    }
+
+    .bg-logo {
+      width: 250px;
+      opacity: 0.04;
+    }
+
+    /* Popups mobile */
+    .virus-popup {
+      width: 90vw !important;
+      max-width: 320px !important;
+      left: 5vw !important;
+    }
+
+    .popup-title {
+      padding: 6px 8px;
+      font-size: 7px;
+    }
+
+    .popup-close {
+      width: 26px;
+      height: 26px;
+      font-size: 10px;
+    }
+
+    .popup-body {
+      padding: 10px;
+      font-size: 9px;
+    }
+
+    .popup-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .popup-btn {
+      padding: 10px 20px;
+      font-size: 8px;
+    }
+
+    /* Solteira popup mobile */
+    .solteira-img {
+      max-height: 100px;
+    }
+
+    .solteira-text {
+      font-size: 10px !important;
+    }
+
+    .solteira-btn {
+      padding: 10px 16px;
+      font-size: 8px;
+    }
+
+    /* Fireworks popup mobile */
+    .fireworks-popup {
+      max-width: 95vw !important;
+    }
+
+    .fireworks-body {
+      min-height: 180px;
+    }
+
+    .fireworks-text {
+      font-size: 11px !important;
+      margin-top: 50px;
+    }
+
+    /* Gallery mobile */
+    .photo-gallery {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Video container mobile */
+    .video-container iframe {
+      height: 200px;
+    }
+
+    /* Notepad mobile */
+    .readme-text {
+      font-size: 6px;
+      line-height: 1.6;
+    }
+
+    .readme-link {
+      font-size: 6px;
+    }
+  }
 </style>
 
 <script>
@@ -977,6 +1078,71 @@ Valeu!
     });
   });
 
+  // Drag dos ícones do desktop (mouse + touch)
+  document.querySelectorAll('.desktop-icon').forEach(iconEl => {
+    let isDragging = false;
+    let hasMoved = false;
+    let startX = 0, startY = 0;
+    let iconStartX = 0, iconStartY = 0;
+
+    function startIconDrag(clientX: number, clientY: number) {
+      isDragging = true;
+      hasMoved = false;
+      const icon = iconEl as HTMLElement;
+      startX = clientX;
+      startY = clientY;
+      iconStartX = icon.offsetLeft;
+      iconStartY = icon.offsetTop;
+    }
+
+    function moveIconDrag(clientX: number, clientY: number) {
+      if (!isDragging) return;
+      const deltaX = clientX - startX;
+      const deltaY = clientY - startY;
+
+      // Só considera drag se moveu mais de 10px
+      if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+        hasMoved = true;
+        const icon = iconEl as HTMLElement;
+        const x = Math.max(0, Math.min(iconStartX + deltaX, window.innerWidth - 60));
+        const y = Math.max(0, Math.min(iconStartY + deltaY, window.innerHeight - 100));
+        icon.style.left = x + 'px';
+        icon.style.top = y + 'px';
+      }
+    }
+
+    function endIconDrag() {
+      isDragging = false;
+    }
+
+    // Mouse events
+    iconEl.addEventListener('mousedown', (e: Event) => {
+      const mouseEvent = e as MouseEvent;
+      startIconDrag(mouseEvent.clientX, mouseEvent.clientY);
+    });
+
+    document.addEventListener('mousemove', (e: MouseEvent) => moveIconDrag(e.clientX, e.clientY));
+    document.addEventListener('mouseup', endIconDrag);
+
+    // Touch events
+    iconEl.addEventListener('touchstart', (e: Event) => {
+      const touchEvent = e as TouchEvent;
+      const touch = touchEvent.touches[0];
+      startIconDrag(touch.clientX, touch.clientY);
+    }, { passive: true });
+
+    iconEl.addEventListener('touchmove', (e: Event) => {
+      const touchEvent = e as TouchEvent;
+      const touch = touchEvent.touches[0];
+      moveIconDrag(touch.clientX, touch.clientY);
+      if (hasMoved) {
+        e.preventDefault(); // Previne scroll durante drag
+      }
+    }, { passive: false });
+
+    iconEl.addEventListener('touchend', endIconDrag);
+  });
+
   // Botões de fechar janela (X) - FECHA completamente
   document.querySelectorAll('[data-close]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1003,73 +1169,113 @@ Valeu!
     win.addEventListener('mousedown', () => bringToFront(win as HTMLElement));
   });
 
-  // Drag das janelas normais
+  // Drag das janelas normais (mouse + touch)
   document.querySelectorAll('[data-draggable]').forEach(titleBar => {
     let isDragging = false;
     let startX = 0, startY = 0;
     let windowEl: HTMLElement | null = null;
 
-    titleBar.addEventListener('mousedown', (e: Event) => {
-      const mouseEvent = e as MouseEvent;
-      // Ignora se clicou nos botões
-      if ((mouseEvent.target as HTMLElement).closest('.title-btn')) return;
-
+    function startDrag(clientX: number, clientY: number, target: HTMLElement) {
+      if (target.closest('.title-btn')) return;
       isDragging = true;
       windowEl = (titleBar as HTMLElement).closest('[data-window]') as HTMLElement;
       if (windowEl) {
-        startX = mouseEvent.clientX - windowEl.offsetLeft;
-        startY = mouseEvent.clientY - windowEl.offsetTop;
+        startX = clientX - windowEl.offsetLeft;
+        startY = clientY - windowEl.offsetTop;
         bringToFront(windowEl);
       }
-    });
+    }
 
-    document.addEventListener('mousemove', (e: MouseEvent) => {
+    function moveDrag(clientX: number, clientY: number) {
       if (!isDragging || !windowEl) return;
-      const x = Math.max(0, Math.min(e.clientX - startX, window.innerWidth - 100));
-      const y = Math.max(0, Math.min(e.clientY - startY, window.innerHeight - 100));
+      const x = Math.max(0, Math.min(clientX - startX, window.innerWidth - 100));
+      const y = Math.max(0, Math.min(clientY - startY, window.innerHeight - 100));
       windowEl.style.left = x + 'px';
       windowEl.style.top = y + 'px';
-    });
+    }
 
-    document.addEventListener('mouseup', () => {
+    function endDrag() {
       isDragging = false;
       windowEl = null;
+    }
+
+    // Mouse events
+    titleBar.addEventListener('mousedown', (e: Event) => {
+      const mouseEvent = e as MouseEvent;
+      startDrag(mouseEvent.clientX, mouseEvent.clientY, mouseEvent.target as HTMLElement);
     });
+
+    document.addEventListener('mousemove', (e: MouseEvent) => moveDrag(e.clientX, e.clientY));
+    document.addEventListener('mouseup', endDrag);
+
+    // Touch events
+    titleBar.addEventListener('touchstart', (e: Event) => {
+      const touchEvent = e as TouchEvent;
+      const touch = touchEvent.touches[0];
+      startDrag(touch.clientX, touch.clientY, touchEvent.target as HTMLElement);
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e: TouchEvent) => {
+      const touch = e.touches[0];
+      moveDrag(touch.clientX, touch.clientY);
+    }, { passive: true });
+
+    document.addEventListener('touchend', endDrag);
   });
 
-  // Drag dos popups de vírus
+  // Drag dos popups de vírus (mouse + touch)
   document.querySelectorAll('[data-popup-drag-handle]').forEach(handle => {
     let isDragging = false;
     let startX = 0, startY = 0;
     let popupEl: HTMLElement | null = null;
 
-    handle.addEventListener('mousedown', (e: Event) => {
-      const mouseEvent = e as MouseEvent;
-      // Ignora se clicou no botão fechar
-      if ((mouseEvent.target as HTMLElement).closest('.popup-close')) return;
-
+    function startPopupDrag(clientX: number, clientY: number, target: HTMLElement) {
+      if (target.closest('.popup-close')) return;
       isDragging = true;
       popupEl = (handle as HTMLElement).closest('.virus-popup') as HTMLElement;
       if (popupEl) {
-        startX = mouseEvent.clientX - popupEl.offsetLeft;
-        startY = mouseEvent.clientY - popupEl.offsetTop;
+        startX = clientX - popupEl.offsetLeft;
+        startY = clientY - popupEl.offsetTop;
         bringPopupToFront(popupEl);
       }
+    }
+
+    function movePopupDrag(clientX: number, clientY: number) {
+      if (!isDragging || !popupEl) return;
+      const x = Math.max(0, Math.min(clientX - startX, window.innerWidth - 100));
+      const y = Math.max(0, Math.min(clientY - startY, window.innerHeight - 80));
+      popupEl.style.left = x + 'px';
+      popupEl.style.top = y + 'px';
+    }
+
+    function endPopupDrag() {
+      isDragging = false;
+      popupEl = null;
+    }
+
+    // Mouse events
+    handle.addEventListener('mousedown', (e: Event) => {
+      const mouseEvent = e as MouseEvent;
+      startPopupDrag(mouseEvent.clientX, mouseEvent.clientY, mouseEvent.target as HTMLElement);
       mouseEvent.preventDefault();
     });
 
-    document.addEventListener('mousemove', (e: MouseEvent) => {
-      if (!isDragging || !popupEl) return;
-      const x = Math.max(0, Math.min(e.clientX - startX, window.innerWidth - 100));
-      const y = Math.max(0, Math.min(e.clientY - startY, window.innerHeight - 80));
-      popupEl.style.left = x + 'px';
-      popupEl.style.top = y + 'px';
-    });
+    document.addEventListener('mousemove', (e: MouseEvent) => movePopupDrag(e.clientX, e.clientY));
+    document.addEventListener('mouseup', endPopupDrag);
 
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      popupEl = null;
-    });
+    // Touch events
+    handle.addEventListener('touchstart', (e: Event) => {
+      const touchEvent = e as TouchEvent;
+      const touch = touchEvent.touches[0];
+      startPopupDrag(touch.clientX, touch.clientY, touchEvent.target as HTMLElement);
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e: TouchEvent) => {
+      const touch = e.touches[0];
+      movePopupDrag(touch.clientX, touch.clientY);
+    }, { passive: true });
+
+    document.addEventListener('touchend', endPopupDrag);
   });
 
   // Click no popup traz para frente
@@ -1089,9 +1295,47 @@ Valeu!
     });
   });
 
+  // Detectar se é mobile
+  const isMobile = window.innerWidth <= 768;
+
+  // Reposicionar ícones do desktop para mobile
+  function repositionIconsForMobile() {
+    if (!isMobile) return;
+
+    const icons = document.querySelectorAll('.desktop-icon');
+    const positions = [
+      { x: 10, y: 10 },    // Lixeira
+      { x: 10, y: 80 },    // Fotos
+      { x: 10, y: 150 },   // Videos
+      { x: 10, y: 220 },   // Audio
+      { x: 10, y: 290 },   // Agenda
+      { x: 80, y: 10 },    // Downloads
+      { x: 80, y: 80 },    // Leia-me
+      { x: 80, y: 150 },   // Secreto
+      { x: 80, y: 220 },   // Stuff
+    ];
+
+    icons.forEach((icon, i) => {
+      if (positions[i]) {
+        (icon as HTMLElement).style.left = positions[i].x + 'px';
+        (icon as HTMLElement).style.top = positions[i].y + 'px';
+      }
+    });
+  }
+
   // Animação de vírus na abertura - posições fixas espalhadas
   function startVirusAnimation() {
-    const popups = [
+    const isMobileNow = window.innerWidth <= 768;
+
+    // Posições diferentes para mobile
+    const popups = isMobileNow ? [
+      { id: 'popup1', x: 10, y: 30 },
+      { id: 'popup3', x: 10, y: 120 },
+      { id: 'popup4', x: 10, y: 210 },
+      { id: 'popup5', x: 10, y: 300 },
+      { id: 'popup6', x: 10, y: 390 },
+      { id: 'popup2', x: 10, y: 80 }
+    ] : [
       { id: 'popup1', x: 80, y: 60 },
       { id: 'popup3', x: 650, y: 40 },
       { id: 'popup4', x: 60, y: 280 },
@@ -1100,26 +1344,26 @@ Valeu!
       { id: 'popup2', x: 450, y: 120 }
     ];
 
-    let delay = 0; // Primeiro popup instantâneo
+    let delay = 0;
     popups.forEach((popupData) => {
       setTimeout(() => {
         const popup = document.getElementById(popupData.id);
         if (popup) {
-          // Ajusta posição baseada no tamanho da tela
-          const maxX = Math.max(100, window.innerWidth - 350);
-          const maxY = Math.max(100, window.innerHeight - 300);
+          const maxX = Math.max(10, window.innerWidth - (isMobileNow ? 100 : 350));
+          const maxY = Math.max(10, window.innerHeight - (isMobileNow ? 150 : 300));
           popup.style.left = Math.min(popupData.x, maxX) + 'px';
           popup.style.top = Math.min(popupData.y, maxY) + 'px';
           popup.style.display = 'block';
           bringPopupToFront(popup);
         }
       }, delay);
-      delay += 250; // 250ms entre cada popup
+      delay += 250;
     });
   }
 
-  // Iniciar vírus quase instantaneamente
+  // Iniciar vírus e reposicionar ícones
   window.addEventListener('load', () => {
+    repositionIconsForMobile();
     setTimeout(startVirusAnimation, 100);
   });
 
