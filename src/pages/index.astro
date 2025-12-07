@@ -218,7 +218,7 @@ const photos = [
     </Window>
 
     <!-- Janela: Agenda -->
-    <Window id="win-calendar" title="Agenda - Shows" width={420} height={340} x={200} y={100}>
+    <Window id="win-calendar" title="Agenda - Shows" width={420} height={380} x={200} y={100}>
       <div class="agenda-container" id="agendaContainer">
         <div class="agenda-header">
           <span class="agenda-icon">📅</span>
@@ -231,8 +231,10 @@ const photos = [
             <div class="loading-bar"><div class="loading-fill"></div></div>
           </div>
         </div>
-        <div class="agenda-footer">
-          <span>Acompanhe @wallitaband para novidades</span>
+        <div class="agenda-instagram">
+          <span>⚠️ Fique ligado! Siga </span>
+          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-link">@wallitaband</a>
+          <span> para não perder nenhum show!</span>
         </div>
       </div>
     </Window>
@@ -677,13 +679,25 @@ Valeu!
     margin-top: 2px;
   }
 
-  .agenda-footer {
-    padding: 6px 12px;
-    background: #c0c0c0;
-    font-size: 6px;
-    color: #666;
+  .agenda-instagram {
+    padding: 10px 12px;
+    background: #ffffcc;
+    font-size: 7px;
+    color: #333;
     text-align: center;
     border-top: 2px groove #fff;
+    line-height: 1.6;
+  }
+
+  .instagram-link {
+    color: #0066cc;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .instagram-link:hover {
+    color: #ff0066;
+    background: #fff;
   }
 
   .agenda-error {
@@ -1207,9 +1221,9 @@ Valeu!
       font-size: 7px;
     }
 
-    .agenda-footer {
-      font-size: 5px;
-      padding: 4px 8px;
+    .agenda-instagram {
+      font-size: 6px;
+      padding: 6px 8px;
     }
 
     .loading-text {
@@ -1761,63 +1775,58 @@ Valeu!
   `;
   document.head.appendChild(fireworkStyles);
 
-  // ========== SISTEMA DE AGENDA COM GOOGLE DOCS ==========
-  const GOOGLE_DOC_ID = '1hita8ioompImCbzXpYqT2eZjvSYgeoTe1VTNUjaKIs8';
-  const GOOGLE_DOC_EXPORT_URL = `https://docs.google.com/document/d/${GOOGLE_DOC_ID}/export?format=txt`;
+  // ========== SISTEMA DE AGENDA COM GOOGLE SHEETS ==========
+  // URL da planilha exportada como CSV
+  const GOOGLE_SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1lJnLSAmD84LHRwj9aQt0b55iogYz97pFGsz9pd3hgH8/export?format=csv&gid=0';
 
-  // Lista de proxies CORS para tentar (em ordem)
-  const CORS_PROXIES = [
-    (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-    (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
+  // Timeout de 3 segundos
+  const FETCH_TIMEOUT = 3000;
+
+  // Dados de fallback caso a requisição falhe
+  const FALLBACK_SHOWS = [
+    { date: '13/12', city: 'CASCAVEL', venue: 'ADEGA NOSTRAVAMOS' },
+    { date: '19/12', city: 'CASCAVEL', venue: 'ADEGA NOSTRAVAMOS' },
+    { date: '20/12', city: 'FOZ DO IGUAÇU', venue: 'CASA URBANA ROCK BAR' }
   ];
-
-  // Timeout para requisições (10 segundos)
-  const FETCH_TIMEOUT = 10000;
 
   // Flag para evitar múltiplas requisições simultâneas
   let isLoadingAgenda = false;
 
-  // Parsear o conteúdo do Google Docs
-  function parseAgendaContent(text: string) {
-    const lines = text.split('\n').filter(line => line.trim() !== '');
+  // Parsear CSV do Google Sheets
+  function parseCSV(csv: string): Array<{date: string, city: string, venue: string}> {
+    const lines = csv.split('\n').filter(line => line.trim() !== '');
     const shows: Array<{date: string, city: string, venue: string}> = [];
 
     for (const line of lines) {
       const trimmed = line.trim();
-      // Ignora linhas de cabeçalho ou vazias
-      if (!trimmed || trimmed.toLowerCase().includes('agenda') || trimmed.toLowerCase().includes('shows')) {
+
+      // Ignora cabeçalhos ou linhas vazias
+      if (!trimmed ||
+          trimmed.toLowerCase().includes('data') ||
+          trimmed.toLowerCase().includes('agenda') ||
+          trimmed.toLowerCase().includes('shows')) {
         continue;
       }
 
-      // Tenta parsear no formato: "DD/MM - CIDADE - LOCAL" ou "DD/MM - CIDADE LOCAL"
-      // Também aceita: "DD/MM CIDADE - LOCAL" ou variações
-      const dateMatch = trimmed.match(/^(\d{1,2}\/\d{1,2})/);
-      if (dateMatch) {
-        const date = dateMatch[1];
-        let rest = trimmed.substring(dateMatch[0].length).trim();
+      // Tenta parsear como CSV (separado por vírgula)
+      // Formato esperado: "DD/MM,CIDADE,LOCAL" ou "DD/MM - CIDADE - LOCAL"
+      let parts: string[] = [];
 
-        // Remove traço inicial se houver
-        if (rest.startsWith('-')) {
-          rest = rest.substring(1).trim();
-        }
+      // Se tem vírgula, usa como separador CSV
+      if (trimmed.includes(',')) {
+        parts = trimmed.split(',').map(p => p.trim().replace(/^"|"$/g, ''));
+      } else if (trimmed.includes(' - ')) {
+        // Fallback para formato com traço
+        parts = trimmed.split(' - ').map(p => p.trim());
+      }
 
-        // Tenta dividir por " - " para separar cidade e local
-        const parts = rest.split(/\s*-\s*/);
-        if (parts.length >= 2) {
-          shows.push({
-            date: date,
-            city: parts[0].toUpperCase(),
-            venue: parts.slice(1).join(' - ').toUpperCase()
-          });
-        } else if (parts.length === 1 && parts[0]) {
-          // Se não tem separador, assume tudo como local/info
-          shows.push({
-            date: date,
-            city: parts[0].toUpperCase(),
-            venue: ''
-          });
-        }
+      // Verifica se a primeira parte parece uma data (DD/MM)
+      if (parts.length >= 2 && /^\d{1,2}\/\d{1,2}/.test(parts[0])) {
+        shows.push({
+          date: parts[0],
+          city: (parts[1] || '').toUpperCase(),
+          venue: (parts[2] || '').toUpperCase()
+        });
       }
     }
 
@@ -1876,19 +1885,6 @@ Valeu!
     `;
   }
 
-  // Mostrar erro na agenda
-  function showAgendaError() {
-    const container = document.getElementById('agendaContent');
-    if (!container) return;
-    container.innerHTML = `
-      <div class="agenda-error">
-        <span style="font-size: 24px; display: block; margin-bottom: 12px;">⚠️</span>
-        <p>Não foi possível carregar a agenda.</p>
-        <p style="margin-top: 8px; color: #666;">Siga <a href="https://www.instagram.com/wallitaband/" target="_blank" style="color: #000080;">@wallitaband</a> para novidades!</p>
-      </div>
-    `;
-  }
-
   // Fetch com timeout
   function fetchWithTimeout(url: string, timeout: number): Promise<Response> {
     return Promise.race([
@@ -1896,8 +1892,9 @@ Valeu!
         method: 'GET',
         cache: 'no-store',
         headers: {
-          'Accept': 'text/plain',
-          'Cache-Control': 'no-cache'
+          'Accept': 'text/csv,text/plain,*/*',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
         }
       }),
       new Promise<Response>((_, reject) =>
@@ -1906,35 +1903,7 @@ Valeu!
     ]);
   }
 
-  // Tentar carregar com múltiplos proxies
-  async function tryLoadWithProxies(): Promise<string | null> {
-    // Adiciona timestamp para cache busting
-    const urlWithTimestamp = `${GOOGLE_DOC_EXPORT_URL}&t=${Date.now()}`;
-
-    for (const proxyFn of CORS_PROXIES) {
-      try {
-        const proxyUrl = proxyFn(urlWithTimestamp);
-        console.log('Tentando proxy:', proxyUrl.substring(0, 50) + '...');
-
-        const response = await fetchWithTimeout(proxyUrl, FETCH_TIMEOUT);
-
-        if (response.ok) {
-          const text = await response.text();
-          if (text && text.length > 0) {
-            console.log('Sucesso! Dados carregados.');
-            return text;
-          }
-        }
-      } catch (error) {
-        console.warn('Proxy falhou:', error);
-        // Continua para o próximo proxy
-      }
-    }
-
-    return null;
-  }
-
-  // Carregar agenda do Google Docs - SEMPRE busca dados novos
+  // Carregar agenda do Google Sheets - SEMPRE busca dados novos
   async function loadAgenda() {
     // Evita múltiplas requisições simultâneas
     if (isLoadingAgenda) return;
@@ -1950,24 +1919,38 @@ Valeu!
     showAgendaLoading();
 
     try {
-      const text = await tryLoadWithProxies();
+      // Cache busting com timestamp
+      const timestamp = Date.now();
+      const urlWithCache = `${GOOGLE_SHEETS_URL}&t=${timestamp}`;
 
-      if (text) {
-        const shows = parseAgendaContent(text);
+      // Usa proxy CORS
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(urlWithCache)}`;
+
+      console.log('Carregando agenda do Google Sheets...');
+
+      const response = await fetchWithTimeout(proxyUrl, FETCH_TIMEOUT);
+
+      if (response.ok) {
+        const csv = await response.text();
+        console.log('CSV recebido:', csv.substring(0, 100) + '...');
+
+        const shows = parseCSV(csv);
 
         if (shows.length > 0) {
+          console.log('Shows encontrados:', shows.length);
           renderAgenda(shows);
         } else {
-          // Documento vazio ou sem shows válidos
-          showAgendaError();
+          // CSV vazio ou sem shows válidos - usa fallback
+          console.log('Nenhum show no CSV, usando fallback');
+          renderAgenda(FALLBACK_SHOWS);
         }
       } else {
-        // Todos os proxies falharam
-        showAgendaError();
+        throw new Error('Resposta não OK');
       }
     } catch (error) {
-      console.error('Erro ao carregar agenda:', error);
-      showAgendaError();
+      console.warn('Erro ao carregar agenda, usando fallback:', error);
+      // Usa dados de fallback imediatamente
+      renderAgenda(FALLBACK_SHOWS);
     } finally {
       isLoadingAgenda = false;
     }
