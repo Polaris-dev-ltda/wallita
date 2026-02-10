@@ -4,6 +4,64 @@ import Taskbar from '../components/Taskbar.astro';
 import DesktopIcon from '../components/DesktopIcon.astro';
 import Window from '../components/Window.astro';
 
+// ========== BUSCA AGENDA DO GOOGLE SHEETS (BUILD TIME) ==========
+const SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1lJnLSAmD84LHRwj9aQt0b55iogYz97pFGsz9pd3hgH8/export?format=csv&gid=0';
+
+// Parser flexível - suporta múltiplos formatos da planilha
+function parseShowLine(line: string): {date: string, city: string, venue: string} | null {
+  const trimmed = line.replace(/^"|"$/g, '').trim();
+
+  // Formato: "DD.MM  - LOCAL / CIDADE" ou "DD/MM - LOCAL / CIDADE"
+  const dashMatch = trimmed.match(/^["']?(\d{1,2})[.\/](\d{1,2})\s*-\s*(.+)$/);
+  if (dashMatch) {
+    const date = `${dashMatch[1]}/${dashMatch[2]}`;
+    const rest = dashMatch[3].trim();
+    const slashIdx = rest.lastIndexOf('/');
+    if (slashIdx > 0) {
+      const venue = rest.substring(0, slashIdx).trim();
+      const city = rest.substring(slashIdx + 1).trim();
+      return { date, city: city.toUpperCase(), venue: venue.toUpperCase() };
+    }
+    return { date, city: rest.toUpperCase(), venue: '' };
+  }
+
+  // Formato CSV: "DD/MM,CIDADE,LOCAL"
+  if (trimmed.includes(',')) {
+    const parts = trimmed.split(',').map((p: string) => p.trim().replace(/^"|"$/g, ''));
+    const dateMatch = parts[0].match(/^(\d{1,2})[.\/](\d{1,2})/);
+    if (dateMatch && parts.length >= 2) {
+      return {
+        date: `${dateMatch[1]}/${dateMatch[2]}`,
+        city: (parts[1] || '').toUpperCase(),
+        venue: (parts[2] || '').toUpperCase()
+      };
+    }
+  }
+
+  return null;
+}
+
+let buildTimeShows: Array<{date: string, city: string, venue: string}> = [];
+try {
+  const res = await fetch(SHEETS_URL, { signal: AbortSignal.timeout(10000) });
+  if (res.ok) {
+    const csv = await res.text();
+    const lines = csv.split('\n').filter((l: string) => l.trim() !== '');
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed ||
+          trimmed.toLowerCase().includes('data') ||
+          trimmed.toLowerCase().includes('agenda') ||
+          trimmed.toLowerCase().includes('shows')) continue;
+      const show = parseShowLine(trimmed);
+      if (show) buildTimeShows.push(show);
+    }
+    console.log(`[Build] Agenda: ${buildTimeShows.length} shows carregados da planilha`);
+  }
+} catch (e) {
+  console.warn('Falha ao buscar agenda no build time:', e);
+}
+
 // Ícones SVG detalhados estilo Windows 95/98
 const icons = {
   trash: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -219,22 +277,36 @@ const photos = [
 
     <!-- Janela: Agenda -->
     <Window id="win-calendar" title="Agenda - Shows" width={420} height={380} x={200} y={100}>
-      <div class="agenda-container" id="agendaContainer">
-        <div class="agenda-header">
-          <span class="agenda-icon">📅</span>
-          <span class="agenda-title">PROXIMOS SHOWS</span>
-        </div>
-        <div class="agenda-divider"></div>
-        <div class="agenda-content" id="agendaContent">
-          <div class="agenda-loading">
-            <span class="loading-text">Carregando agenda...</span>
-            <div class="loading-bar"><div class="loading-fill"></div></div>
-          </div>
-        </div>
-        <div class="agenda-instagram">
-          <span>⚠️ Fique ligado! Siga </span>
-          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="instagram-link">@wallitaband</a>
-          <span> para não perder nenhum show!</span>
+      <div class="notepad-content" id="agendaContainer">
+        <div class="agenda-text" id="agendaContent">
+{buildTimeShows.length > 0 ? (
+`=======================================
+       PROXIMOS SHOWS
+=======================================
+
+` + buildTimeShows.map((show) => {
+  const [day, month] = show.date.split('/');
+  const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+  const monthName = months[parseInt(month) - 1] || month;
+  return `${day} ${monthName} - ${show.venue ? show.venue : ''}
+         ${show.city}`;
+}).join(`
+---------------------------------------
+`) + `
+
+=======================================
+Siga @wallitaband no Instagram
+para nao perder nenhum show!
+=======================================`
+) : (
+`=======================================
+       PROXIMOS SHOWS
+=======================================
+
+   Carregando agenda...
+
+=======================================`
+)}
         </div>
       </div>
     </Window>
@@ -605,153 +677,12 @@ Valeu!
   }
 
   /* Agenda - Estilo Windows 95 */
-  .agenda-container {
-    height: 100%;
-    background: #c0c0c0;
-    display: flex;
-    flex-direction: column;
+  .agenda-text {
     font-family: 'Press Start 2P', monospace;
-  }
-
-  .agenda-header {
-    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
-    color: #fff;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .agenda-icon {
-    font-size: 14px;
-  }
-
-  .agenda-title {
-    font-size: 10px;
-    text-shadow: 1px 1px 0 #000;
-  }
-
-  .agenda-divider {
-    height: 3px;
-    background: linear-gradient(90deg, #ffcc00, #ff6600, #cc0000);
-  }
-
-  .agenda-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-    background: #fff;
-    border: 2px inset #808080;
-    margin: 8px;
-  }
-
-  .agenda-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    gap: 12px;
-  }
-
-  .loading-text {
     font-size: 8px;
-    color: #000080;
-  }
-
-  .loading-bar {
-    width: 150px;
-    height: 16px;
-    background: #fff;
-    border: 2px inset #808080;
-    overflow: hidden;
-  }
-
-  .loading-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #000080 25%, #0000aa 25%, #0000aa 50%, #000080 50%, #000080 75%, #0000aa 75%);
-    background-size: 20px 100%;
-    animation: loadingAnim 0.5s linear infinite;
-  }
-
-  @keyframes loadingAnim {
-    0% { transform: translateX(-20px); width: 100%; }
-    100% { transform: translateX(0); width: 100%; }
-  }
-
-  .agenda-show {
-    display: flex;
-    align-items: flex-start;
-    padding: 8px;
-    margin-bottom: 6px;
-    background: #f0f0f0;
-    border: 2px outset #fff;
-    gap: 10px;
-  }
-
-  .agenda-show:hover {
-    background: #e0e0ff;
-    border-color: #000080;
-  }
-
-  .show-date-box {
-    min-width: 50px;
-    text-align: center;
-    background: #cc0000;
-    color: #fff;
-    padding: 4px 6px;
-    border: 2px outset #ff6666;
-  }
-
-  .show-date-day {
-    font-size: 14px;
-    font-weight: bold;
-    display: block;
-  }
-
-  .show-date-month {
-    font-size: 6px;
-    display: block;
-    margin-top: 2px;
-  }
-
-  .show-info-box {
-    flex: 1;
-    font-size: 8px;
-    line-height: 1.6;
-  }
-
-  .show-city {
-    color: #000080;
-    font-weight: bold;
-    display: block;
-  }
-
-  .show-venue {
-    color: #666;
-    display: block;
-    margin-top: 2px;
-  }
-
-  .agenda-instagram {
-    padding: 10px 12px;
-    background: #ffffcc;
-    font-size: 7px;
-    color: #333;
-    text-align: center;
-    border-top: 2px groove #fff;
-    line-height: 1.6;
-  }
-
-  .instagram-link {
-    color: #0066cc;
-    text-decoration: underline;
-    font-weight: bold;
-  }
-
-  .instagram-link:hover {
-    color: #ff0066;
-    background: #fff;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: #000;
   }
 
   .agenda-error {
@@ -1549,57 +1480,9 @@ Valeu!
     }
 
     /* Agenda mobile */
-    .agenda-header {
-      padding: 6px 8px;
-    }
-
-    .agenda-icon {
-      font-size: 12px;
-    }
-
-    .agenda-title {
-      font-size: 8px;
-    }
-
-    .agenda-content {
-      padding: 6px;
-      margin: 6px;
-    }
-
-    .agenda-show {
-      padding: 6px;
-      gap: 8px;
-    }
-
-    .show-date-box {
-      min-width: 40px;
-      padding: 3px 5px;
-    }
-
-    .show-date-day {
-      font-size: 12px;
-    }
-
-    .show-date-month {
-      font-size: 5px;
-    }
-
-    .show-info-box {
-      font-size: 7px;
-    }
-
-    .agenda-instagram {
+    .agenda-text {
       font-size: 6px;
-      padding: 6px 8px;
-    }
-
-    .loading-text {
-      font-size: 6px;
-    }
-
-    .loading-bar {
-      width: 100px;
-      height: 12px;
+      line-height: 1.6;
     }
   }
 
@@ -2536,169 +2419,116 @@ Valeu!
   document.head.appendChild(fireworkStyles);
 
   // ========== SISTEMA DE AGENDA COM GOOGLE SHEETS ==========
-  // URL da planilha exportada como CSV
-  const GOOGLE_SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1lJnLSAmD84LHRwj9aQt0b55iogYz97pFGsz9pd3hgH8/export?format=csv&gid=0';
+  // Endpoint Google Visualization API - suporta CORS nativamente
+  const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1lJnLSAmD84LHRwj9aQt0b55iogYz97pFGsz9pd3hgH8/gviz/tq?tqx=out:csv&gid=0';
+  const FETCH_TIMEOUT = 5000;
 
-  // Timeout de 3 segundos
-  const FETCH_TIMEOUT = 3000;
-
-  // Dados de fallback caso a requisição falhe
-  const FALLBACK_SHOWS = [
-    { date: '13/12', city: 'CASCAVEL', venue: 'ADEGA NOSTRAVAMOS' },
-    { date: '19/12', city: 'CASCAVEL', venue: 'ADEGA NOSTRAVAMOS' },
-    { date: '20/12', city: 'FOZ DO IGUAÇU', venue: 'CASA URBANA ROCK BAR' }
-  ];
-
-  // Flag para evitar múltiplas requisições simultâneas
   let isLoadingAgenda = false;
 
-  // Parsear CSV do Google Sheets
+  // Parser flexível - suporta múltiplos formatos da planilha
+  function parseShowLineClient(line: string): {date: string, city: string, venue: string} | null {
+    const trimmed = line.replace(/^"|"$/g, '').trim();
+
+    // Formato: "DD.MM - LOCAL / CIDADE" ou "DD/MM - LOCAL / CIDADE"
+    const dashMatch = trimmed.match(/^["']?(\d{1,2})[.\/](\d{1,2})\s*-\s*(.+)$/);
+    if (dashMatch) {
+      const date = `${dashMatch[1]}/${dashMatch[2]}`;
+      const rest = dashMatch[3].trim();
+      const slashIdx = rest.lastIndexOf('/');
+      if (slashIdx > 0) {
+        const venue = rest.substring(0, slashIdx).trim();
+        const city = rest.substring(slashIdx + 1).trim();
+        return { date, city: city.toUpperCase(), venue: venue.toUpperCase() };
+      }
+      return { date, city: rest.toUpperCase(), venue: '' };
+    }
+
+    // Formato CSV: "DD/MM,CIDADE,LOCAL"
+    if (trimmed.includes(',')) {
+      const parts = trimmed.split(',').map((p: string) => p.trim().replace(/^"|"$/g, ''));
+      const dateMatch = parts[0].match(/^(\d{1,2})[.\/](\d{1,2})/);
+      if (dateMatch && parts.length >= 2) {
+        return {
+          date: `${dateMatch[1]}/${dateMatch[2]}`,
+          city: (parts[1] || '').toUpperCase(),
+          venue: (parts[2] || '').toUpperCase()
+        };
+      }
+    }
+
+    return null;
+  }
+
   function parseCSV(csv: string): Array<{date: string, city: string, venue: string}> {
     const lines = csv.split('\n').filter(line => line.trim() !== '');
     const shows: Array<{date: string, city: string, venue: string}> = [];
 
     for (const line of lines) {
       const trimmed = line.trim();
-
-      // Ignora cabeçalhos ou linhas vazias
       if (!trimmed ||
           trimmed.toLowerCase().includes('data') ||
           trimmed.toLowerCase().includes('agenda') ||
           trimmed.toLowerCase().includes('shows')) {
         continue;
       }
-
-      // Tenta parsear como CSV (separado por vírgula)
-      // Formato esperado: "DD/MM,CIDADE,LOCAL" ou "DD/MM - CIDADE - LOCAL"
-      let parts: string[] = [];
-
-      // Se tem vírgula, usa como separador CSV
-      if (trimmed.includes(',')) {
-        parts = trimmed.split(',').map(p => p.trim().replace(/^"|"$/g, ''));
-      } else if (trimmed.includes(' - ')) {
-        // Fallback para formato com traço
-        parts = trimmed.split(' - ').map(p => p.trim());
-      }
-
-      // Verifica se a primeira parte parece uma data (DD/MM)
-      if (parts.length >= 2 && /^\d{1,2}\/\d{1,2}/.test(parts[0])) {
-        shows.push({
-          date: parts[0],
-          city: (parts[1] || '').toUpperCase(),
-          venue: (parts[2] || '').toUpperCase()
-        });
-      }
+      const show = parseShowLineClient(trimmed);
+      if (show) shows.push(show);
     }
 
     return shows;
   }
 
-  // Renderizar os shows na agenda
   function renderAgenda(shows: Array<{date: string, city: string, venue: string}>) {
     const container = document.getElementById('agendaContent');
     if (!container) return;
 
     if (shows.length === 0) {
-      container.innerHTML = `
-        <div class="agenda-empty">
-          <span class="agenda-empty-icon">📭</span>
-          <p>Nenhum show agendado no momento.</p>
-          <p style="margin-top: 8px;">Fique ligado nas redes!</p>
-        </div>
-      `;
+      container.textContent = `=======================================
+       PROXIMOS SHOWS
+=======================================
+
+   Nenhum show agendado no momento.
+   Fique ligado nas redes!
+
+=======================================`;
       return;
     }
 
     const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+    let text = `=======================================
+       PROXIMOS SHOWS
+=======================================\n\n`;
 
-    let html = '';
-    for (const show of shows) {
+    for (let i = 0; i < shows.length; i++) {
+      const show = shows[i];
       const [day, month] = show.date.split('/');
       const monthName = months[parseInt(month) - 1] || month;
-
-      html += `
-        <div class="agenda-show">
-          <div class="show-date-box">
-            <span class="show-date-day">${day}</span>
-            <span class="show-date-month">${monthName}</span>
-          </div>
-          <div class="show-info-box">
-            <span class="show-city">${show.city}</span>
-            ${show.venue ? `<span class="show-venue">${show.venue}</span>` : ''}
-          </div>
-        </div>
-      `;
+      text += `${day} ${monthName} - ${show.venue ? show.venue : ''}\n`;
+      text += `         ${show.city}`;
+      if (i < shows.length - 1) {
+        text += `\n---------------------------------------\n`;
+      }
     }
 
-    container.innerHTML = html;
+    text += `\n\n=======================================
+Siga @wallitaband no Instagram
+para nao perder nenhum show!
+=======================================`;
+
+    container.textContent = text;
   }
 
-  // Mostrar estado de loading
-  function showAgendaLoading() {
-    const container = document.getElementById('agendaContent');
-    if (!container) return;
-    container.innerHTML = `
-      <div class="agenda-loading">
-        <span class="loading-text">Carregando agenda...</span>
-        <div class="loading-bar"><div class="loading-fill"></div></div>
-      </div>
-    `;
-  }
-
-  // Fetch com timeout
-  function fetchWithTimeout(url: string, timeout: number): Promise<Response> {
-    return Promise.race([
-      fetch(url, {
-        method: 'GET',
-        cache: 'no-store',
-        headers: {
-          'Accept': 'text/csv,text/plain,*/*',
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache'
-        }
-      }),
-      new Promise<Response>((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout')), timeout)
-      )
-    ]);
-  }
-
-  // Carregar agenda do Google Sheets - SEMPRE busca dados novos (sem cache)
+  // Carregar agenda do Google Sheets (direto, sem proxy CORS)
   async function loadAgenda() {
-    // Evita múltiplas requisições simultâneas
     if (isLoadingAgenda) return;
     isLoadingAgenda = true;
 
     const container = document.getElementById('agendaContent');
-    if (!container) {
-      isLoadingAgenda = false;
-      return;
-    }
-
-    // Mostra loading
-    showAgendaLoading();
+    if (!container) { isLoadingAgenda = false; return; }
 
     try {
-      // Cache busting FORTE: timestamp + random
-      const nocache = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
-      const sheetUrl = `${GOOGLE_SHEETS_URL}&nocache=${nocache}`;
-
-      // Usa corsproxy.io (não cacheia como allorigins)
-      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(sheetUrl)}`;
-
-      console.log('Carregando agenda (nocache=' + nocache + ')...');
-
-      // Fetch com headers anti-cache
       const response = await Promise.race([
-        fetch(proxyUrl, {
-          method: 'GET',
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          }
-        }),
+        fetch(GOOGLE_SHEETS_CSV_URL, { method: 'GET', cache: 'no-store' }),
         new Promise<Response>((_, reject) =>
           setTimeout(() => reject(new Error('Timeout')), FETCH_TIMEOUT)
         )
@@ -2706,25 +2536,15 @@ Valeu!
 
       if (response.ok) {
         const csv = await response.text();
-        console.log('CSV recebido:', csv.substring(0, 100) + '...');
-
         const shows = parseCSV(csv);
-
         if (shows.length > 0) {
-          console.log('Shows encontrados:', shows.length);
+          console.log('Agenda atualizada:', shows.length, 'shows');
           renderAgenda(shows);
-        } else {
-          // CSV vazio ou sem shows válidos - usa fallback
-          console.log('Nenhum show no CSV, usando fallback');
-          renderAgenda(FALLBACK_SHOWS);
         }
-      } else {
-        throw new Error('Resposta não OK: ' + response.status);
       }
     } catch (error) {
-      console.warn('Erro ao carregar agenda, usando fallback:', error);
-      // Usa dados de fallback imediatamente
-      renderAgenda(FALLBACK_SHOWS);
+      console.warn('Erro ao atualizar agenda:', error);
+      // Mantém o conteúdo pré-renderizado do build
     } finally {
       isLoadingAgenda = false;
     }
@@ -2733,31 +2553,23 @@ Valeu!
   // Observar quando a janela da agenda é aberta
   const calendarWindow = document.getElementById('win-calendar');
   if (calendarWindow) {
-    // Observer para detectar quando a janela fica visível
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
           const display = (calendarWindow as HTMLElement).style.display;
           if (display !== 'none' && display !== '') {
-            // Sempre carrega quando abrir a janela
             loadAgenda();
           }
         }
       }
     });
-
     observer.observe(calendarWindow, { attributes: true });
   }
 
-  // Carrega quando clicar no ícone da agenda
   const calendarIcon = document.querySelector('[data-window-id="win-calendar"]');
   if (calendarIcon) {
-    calendarIcon.addEventListener('click', () => {
-      setTimeout(loadAgenda, 100);
-    });
-    calendarIcon.addEventListener('dblclick', () => {
-      setTimeout(loadAgenda, 100);
-    });
+    calendarIcon.addEventListener('click', () => setTimeout(loadAgenda, 100));
+    calendarIcon.addEventListener('dblclick', () => setTimeout(loadAgenda, 100));
   }
 
   // ========== SISTEMA DE DESENHO ==========
