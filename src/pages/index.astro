@@ -251,6 +251,7 @@ const photos = [
     <DesktopIcon id="win-readme" label="Leia-me.txt" icon={icons.file} x={280} y={520} />
     <DesktopIcon id="win-folder3" label="Secreto" icon={icons.folder} x={900} y={500} />
     <DesktopIcon id="win-folder4" label="Stuff" icon={icons.folder} x={480} y={280} />
+    <DesktopIcon id="win-tabs" label="Tabs" icon={icons.folder} x={150} y={280} />
 
     <!-- Janela: Lixeira (Spotify) -->
     <Window id="win-trash" title="Lixeira - Spotify" width={450} height={350} x={150} y={80}>
@@ -312,35 +313,38 @@ para nao perder nenhum show!
     </Window>
 
     <!-- Janela: Vídeos -->
-    <Window id="win-videos" title="Videos" width={420} height={320} x={160} y={40}>
-      <div class="videos-window-content">
-        <!-- Header -->
-        <div class="video-header">
-          <span>🎬 LYRIC VIDEO - WALLITA</span>
-        </div>
+<Window id="win-videos" title="Videos" width={480} height={420} x={160} y={40}>
+  <div class="videos-window-content">
+    <div class="video-header">
+      <span>🎬 VIDEOS - WALLITA</span>
+    </div>
 
-        <!-- YouTube embed -->
-        <div class="youtube-container">
-          <iframe
-            src="https://www.youtube.com/embed/OqDDSTlLU7Q?rel=0&modestbranding=1"
-            title="Wallita - Lyric Video"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-
-        <!-- Botões lado a lado -->
-        <div class="video-buttons-row">
-          <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn">
-            📺 YouTube
-          </a>
-          <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn">
-            📱 Instagram
-          </a>
-        </div>
+    <div class="video-list">
+      <div class="video-item" data-src="https://www.youtube.com/embed/4PoEB4fZyz8">
+        <img src="https://img.youtube.com/vi/4PoEB4fZyz8/mqdefault.jpg" class="video-thumb" />
+        <span class="video-title">wallita - MAKE YOU BLUSH</span>
       </div>
-    </Window>
+      <div class="video-item" data-src="https://www.youtube.com/embed/MRw31qOzXG0">
+        <img src="https://img.youtube.com/vi/MRw31qOzXG0/mqdefault.jpg" class="video-thumb" />
+        <span class="video-title">wallita - atma Null [Lyric Video]</span>
+      </div>
+      <div class="video-item" data-src="https://www.youtube.com/embed/-Vi6gWsFviA">
+        <img src="https://img.youtube.com/vi/-Vi6gWsFviA/mqdefault.jpg" class="video-thumb" />
+        <span class="video-title">wallita - atma Null [Live]</span>
+      </div>
+    </div>
+
+    <div class="video-player" id="videoPlayer" style="display: none;">
+      <iframe id="videoIframe" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <div class="video-buttons-row">
+      <button id="videoBackBtn" class="video-btn" style="display: none; color: #000; font-family: 'Press Start 2P', cursive; border: none;">Voltar</button>
+      <a href="https://www.youtube.com/@WallitaBand" target="_blank" class="video-btn">📺 YouTube</a>
+      <a href="https://www.instagram.com/wallitaband/" target="_blank" class="video-btn">📱 Instagram</a>
+    </div>
+  </div>
+  </Window>
 
     <!-- Janela: Áudio -->
     <Window id="win-audio" title="Audio Player - Spotify" width={400} height={450} x={250} y={80}>
@@ -441,6 +445,39 @@ Valeu!
         <p style="font-size: 8px; margin-top: 8px; color: #666;">Em construcao...</p>
       </div>
     </Window>
+ 
+<!-- Janela: Tabs -->
+<Window id="win-tabs" title="Tabs - Oficial Tabs" width={1150} height={750} x={300} y={50}>
+  <div class="tabs-window-content" style="margin: -8px; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 16px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); height: calc(100% + 16px);">
+    <p class="tabs-main-title" style="text-align: center; width: 100%; color: #4a8c0a; font-size: 12px; text-shadow: 1px 1px 0 #000; animation: tabsTitlePulse 1s ease-in-out infinite;">OFICIAL TABS - WALLITA</p>
+    <div class="tabs-options-row" style="display: flex; flex-direction: row; gap: 16px; justify-content: center;">
+      <div class="tabs-option-card" style="display: flex; flex-direction: column; align-items: center; gap: 10px; border: 3px solid #4a8c0a; padding: 10px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); box-shadow: 2px 2px 0 rgba(0,0,0,0.3);"> 
+        <img src="/images/tabs_atma_null.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain;" />
+        <p style="font-size: 10px; color: #242424; text-align: center; font-weight: bold;">Incluso: Tabs oficiais de guitarra e baixo da<br>"atma Null"</p>
+        <a
+          href="https://wa.me/5545991587581?text=FALA%20COMIGO%20xups%2C%20aka%20Davillita%2C%20o%20guitarrista%20mais%20lindo%20e%20perfeito%20do%20universo%20💚%0A%0AQUERO%20as%20TABS%20da%20%22atma%20Null%22!!"
+          target="_blank"
+          class="tabs-btn"
+          style="display: block; padding: 20px 14px; background: linear-gradient(180deg, #6bb90e 0%, #4a8c0a 100%); color: #fff; text-decoration: none; font-size: 14px; text-align: center; border: 2px outset #8ed922; text-shadow: 1px 1px 0 #000;"
+        >
+          Quero as tabs da "atma Null"
+        </a>
+      </div>
+      <div class="tabs-option-card" style="display: flex; flex-direction: column; align-items: center; gap: 10px; border: 3px solid #4a8c0a; padding: 10px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); box-shadow: 2px 2px 0 rgba(0,0,0,0.3);">
+        <img src="/images/tabs_MAKE_YOU_BLUSH.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain;" />
+        <p style="font-size: 10px; color: #242424; text-align: center; font-weight: bold;">Incluso: Tabs oficiais de guitarra, baixo e bateria da "MAKE YOU BLUSH"</p>
+        <a
+          href="https://wa.me/5545991587581?text=FALA%20COMIGO%20xups%2C%20aka%20Davillita%2C%20o%20guitarrista%20mais%20lindo%20e%20perfeito%20do%20universo%20💚%0A%0AQUERO%20as%20TABS%20da%20%22MAKE%20YOU%20BLUSH%22!!"
+          target="_blank"
+          class="tabs-btn"
+          style="display: block; padding: 20px 14px; background: linear-gradient(180deg, #cedd0b 0%, #cedd0b 100%); color: #fff; text-decoration: none; font-size: 14px; text-align: center; border: 2px outset #8ed922; text-shadow: 1px 1px 0 #000;"
+        >
+          Quero as tabs da "MAKE YOU BLUSH"
+        </a>
+      </div>
+    </div>
+  </div>
+</Window>
 
     <!-- POPUPS DE VÍRUS - posições espalhadas, arrastáveis -->
     <div class="popup-container" id="popupContainer">
@@ -480,7 +517,7 @@ Valeu!
       </div>
 
       <!-- Popup 2 - YouTube - centro direita -->
-      <div class="virus-popup" id="popup2" data-popup-draggable style="left: 500px; top: 150px; display: none; width: 400px;">
+      <div class="virus-popup" id="popup2" data-popup-draggable style="left: 500px; top: 150px; display: none; width: 650px;">
         <div class="popup-title" data-popup-drag-handle>
           <span>WALLITA - CLIPE OFICIAL</span>
           <button class="popup-close" data-popup-close="popup2">X</button>
@@ -488,8 +525,8 @@ Valeu!
         <div class="popup-body" style="padding: 0;">
           <iframe
             width="100%"
-            height="225"
-            src="https://www.youtube.com/embed/OqDDSTlLU7Q?autoplay=1&mute=1"
+            height="365"
+            src="https://www.youtube.com/embed/4PoEB4fZyz8" 
             title="Wallita"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -1819,6 +1856,113 @@ Valeu!
       font-size: 12px;
     }
   }
+/* ========== TABS WINDOW ========== */
+:global(.tabs-window-content) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%);
+  height: 100%;
+  border: 3px solid #4a8c0a;
+}
+
+:global(.tabs-main-title) {
+  font-size: 12px;
+  font-weight: bold;
+  color: #4a8c0a;
+  text-shadow: 1px 1px 0 #000;
+  margin: 0;
+  text-align: center;
+  animation: tabsTitlePulse 1s ease-in-out infinite;
+}
+
+
+:global(.tabs-options-row) {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+:global(.tabs-option-card) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border: 3px solid #4a8c0a;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+:global(.tabs-btn) {
+  display: inline-block;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, #6bb90e 0%, #4a8c0a 100%);
+  color: #fff !important;
+  text-decoration: none !important;
+  font-size: 8px;
+  text-align: center;
+  border: 2px outset #8ed922;
+  text-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+  animation: tabsBtnPulse 1s ease-in-out infinite;
+}
+
+@keyframes tabsBtnPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); box-shadow: 0 0 15px #6bb90e; }
+}
+
+:global(.tabs-btn:hover) {
+  background: linear-gradient(180deg, #8ed922 0%, #6bb90e 100%);
+}
+
+/* ========== VIDEO LIST ========== */
+.video-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: #000;
+  flex: 1;
+}
+
+.video-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.video-item:hover {
+  border: 2px solid var(--neon-green);
+  background: #111;
+}
+
+.video-thumb {
+  width: 100px;
+  height: 56px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.video-title {
+  color: #fff;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.video-player {
+  width: 100%;
+  height: 220px;
+  background: #000;
+}
+
+
 </style>
 
 <script>
@@ -1828,10 +1972,10 @@ Valeu!
   const minimizedWindows: Map<string, { title: string }> = new Map();
 
   function bringToFront(windowEl: HTMLElement) {
-    zIndex++;
-    windowEl.style.zIndex = String(zIndex);
-    document.querySelectorAll('[data-window]').forEach(w => w.classList.add('inactive'));
-    windowEl.classList.remove('inactive');
+  popupZIndex++;
+  windowEl.style.zIndex = String(popupZIndex);
+  document.querySelectorAll('[data-window]').forEach(w => w.classList.add('inactive'));
+  windowEl.classList.remove('inactive');
   }
 
   function bringPopupToFront(popupEl: HTMLElement) {
@@ -2230,12 +2374,12 @@ Valeu!
       { id: 'popup6', x: 10, y: 390 },
       { id: 'popup2', x: 10, y: 80 }
     ] : [
-      { id: 'popup1', x: 80, y: 60 },
-      { id: 'popup3', x: 650, y: 40 },
-      { id: 'popup4', x: 60, y: 280 },
-      { id: 'popup5', x: 350, y: 200 },
-      { id: 'popup6', x: 550, y: 380 },
-      { id: 'popup2', x: 450, y: 120 }
+      { id: 'popup1', x: 1500, y: 60 },
+      { id: 'popup3', x: 900, y: 40 },
+      { id: 'popup4', x: 1200, y: 580 },
+      { id: 'popup5', x: 1400, y: 200 },
+      { id: 'popup6', x: 850, y: 320 },
+      { id: 'popup2', x: 300, y: 120 }
     ];
 
     let delay = 0;
@@ -2884,4 +3028,37 @@ para nao perder nenhum show!
       }
     }, 500);
   });
+
+// ========== SISTEMA DE VÍDEOS ==========
+document.querySelectorAll('.video-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const src = (item as HTMLElement).dataset.src;
+    const player = document.getElementById('videoPlayer');
+    const iframe = document.getElementById('videoIframe') as HTMLIFrameElement;
+    const list = document.querySelector('.video-list') as HTMLElement;
+    const backBtn = document.getElementById('videoBackBtn') as HTMLElement;
+
+    if (src && player && iframe && list && backBtn) {
+      iframe.src = src + '?autoplay=1';
+      player.style.display = 'block';
+      list.style.display = 'none';
+      backBtn.style.display = 'inline-block';
+    }
+  });
+});
+
+const videoBackBtn = document.getElementById('videoBackBtn');
+videoBackBtn?.addEventListener('click', () => {
+  const player = document.getElementById('videoPlayer');
+  const iframe = document.getElementById('videoIframe') as HTMLIFrameElement;
+  const list = document.querySelector('.video-list') as HTMLElement;
+  const backBtn = document.getElementById('videoBackBtn') as HTMLElement;
+
+  if (player && iframe && list && backBtn) {
+    iframe.src = '';
+    player.style.display = 'none';
+    list.style.display = 'flex';
+    backBtn.style.display = 'none';
+  }
+});
 </script>
