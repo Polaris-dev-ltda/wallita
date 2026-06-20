@@ -1924,6 +1924,11 @@ Valeu!
   50% { transform: rotate(0.5deg); }
 }
 
+@keyframes wiggleBig {
+  0%, 100% { transform: rotate(-0.5deg) scale(1.1); }
+  50% { transform: rotate(0.5deg) scale(1.1); }
+}
+
 /* ========== VIDEO LIST ========== */
 .video-list {
   display: flex;
@@ -3065,5 +3070,19 @@ videoBackBtn?.addEventListener('click', () => {
     list.style.display = 'flex';
     backBtn.style.display = 'none';
   }
+});
+
+// ========== HOVER NAS TABS ==========
+document.querySelectorAll('.tabs-option-card').forEach(card => {
+  const img = card.querySelector('img') as HTMLElement;
+  if (!img) return;
+
+  card.addEventListener('mouseenter', () => {
+    img.style.animation = 'wiggleBig 0.2s ease-in-out infinite';
+  });
+
+  card.addEventListener('mouseleave', () => {
+    img.style.animation = 'wiggle 0.2s ease-in-out infinite';
+  });
 });
 </script>
