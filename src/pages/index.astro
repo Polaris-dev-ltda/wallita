@@ -452,7 +452,7 @@ Valeu!
     <p class="tabs-main-title" style="text-align: center; width: 100%; color: #4a8c0a; font-size: 12px; text-shadow: 1px 1px 0 #000; animation: tabsTitlePulse 1s ease-in-out infinite;">OFICIAL TABS - WALLITA</p>
     <div class="tabs-options-row" style="display: flex; flex-direction: row; gap: 16px; justify-content: center;">
       <div class="tabs-option-card" style="display: flex; flex-direction: column; align-items: center; gap: 10px; border: 3px solid #4a8c0a; padding: 10px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); box-shadow: 2px 2px 0 rgba(0,0,0,0.3);"> 
-        <img src="/images/tabs_atma_null.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain;" />
+        <img src="/images/tabs_atma_null.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain; animation: wiggle 0.5s ease-in-out infinite;" />
         <p style="font-size: 10px; color: #242424; text-align: center; font-weight: bold;">Incluso: Tabs oficiais de guitarra e baixo da<br>"atma Null"</p>
         <a
           href="https://wa.me/5545991587581?text=FALA%20COMIGO%20xups%2C%20aka%20Davillita%2C%20o%20guitarrista%20mais%20lindo%20e%20perfeito%20do%20universo%20💚%0A%0AQUERO%20as%20TABS%20da%20%22atma%20Null%22!!"
@@ -464,7 +464,7 @@ Valeu!
         </a>
       </div>
       <div class="tabs-option-card" style="display: flex; flex-direction: column; align-items: center; gap: 10px; border: 3px solid #4a8c0a; padding: 10px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); box-shadow: 2px 2px 0 rgba(0,0,0,0.3);">
-        <img src="/images/tabs_MAKE_YOU_BLUSH.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain;" />
+        <img src="/images/tabs_MAKE_YOU_BLUSH.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain; animation: wiggle 0.5s ease-in-out infinite;" />
         <p style="font-size: 10px; color: #242424; text-align: center; font-weight: bold;">Incluso: Tabs oficiais de guitarra, baixo e bateria da "MAKE YOU BLUSH"</p>
         <a
           href="https://wa.me/5545991587581?text=FALA%20COMIGO%20xups%2C%20aka%20Davillita%2C%20o%20guitarrista%20mais%20lindo%20e%20perfeito%20do%20universo%20💚%0A%0AQUERO%20as%20TABS%20da%20%22MAKE%20YOU%20BLUSH%22!!"
@@ -1917,6 +1917,11 @@ Valeu!
 
 :global(.tabs-btn:hover) {
   background: linear-gradient(180deg, #8ed922 0%, #6bb90e 100%);
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
 }
 
 /* ========== VIDEO LIST ========== */
