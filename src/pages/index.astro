@@ -1943,6 +1943,11 @@ Valeu!
   50% { transform: scale(1.05); box-shadow: 0 0 15px #6bb90e; }
 }
 
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-0.5deg); }
+  50% { transform: rotate(0.5deg); }
+}
+
 /* TABS MOBILE */
 @media screen and (max-width: 768px) {
   :global(.tabs-window-content) {
