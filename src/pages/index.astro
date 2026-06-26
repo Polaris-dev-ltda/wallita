@@ -219,37 +219,7 @@ const icons = {
     <polygon points="10,36 20,22 30,36" fill="#8ed922"/>
     <polygon points="22,36 32,24 40,36" fill="#ff6600"/>
     <polygon points="24,36 32,26 38,36" fill="#ffcc00"/>
-  </svg>`,
-  tabs: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-     <!-- Aba da pasta -->
-    <rect x="4" y="8" width="18" height="6" fill="#ffcc00"/>
-    <rect x="4" y="8" width="18" height="2" fill="#ffee66"/>
-    <polygon points="22,8 26,14 22,14" fill="#ff9900"/>
-    <!-- Corpo da pasta -->
-    <rect x="4" y="14" width="40" height="30" fill="#ffcc00"/>
-    <rect x="4" y="14" width="2" height="30" fill="#ffee66"/>
-    <rect x="4" y="14" width="40" height="2" fill="#ffee66"/>
-    <rect x="42" y="14" width="2" height="30" fill="#cc9900"/>
-    <rect x="4" y="42" width="40" height="2" fill="#cc9900"/>
-    <!-- Detalhe interno -->
-    <rect x="8" y="20" width="32" height="18" fill="#ff9900" fill-opacity="0.3"/>
-    <!-- Linhas de papel dentro -->
-    <rect x="12" y="24" width="20" height="2" fill="#0066cc"/>
-    <rect x="12" y="30" width="16" height="2" fill="#cc0000"/>
-   <!-- Folha 1 - centro -->
-   <rect x="20" y="4" width="18" height="8" fill="#f0f0f0"/>
-    <rect x="20" y="4" width="8" height="2" fill="#fff"/>
-    <rect x="22" y="8" width="4" height="1" fill="#6bb90e"/>
-    <rect x="22" y="11" width="4" height="1" fill="#6bb90e"/>
-    <!-- Folha 2 - esquerda -->
-    <rect x="10" y="6" width="16" height="8" fill="#f0f0f0"/>
-    <rect x="10" y="6" width="8" height="2" fill="#fff"/>
-    <rect x="12" y="10" width="4" height="1" fill="#6bb90e"/>
-    <!-- Folha 3 - direita -->
-    <rect x="27" y="6" width="16" height="8" fill="#f0f0f0"/>
-    <rect x="27" y="6" width="8" height="2" fill="#fff"/>
-    <rect x="29" y="10" width="4" height="1" fill="#6bb90e"/>
-  </svg>`,
+  </svg>`
 };
 
 // Fotos da galeria
@@ -281,7 +251,7 @@ const photos = [
     <DesktopIcon id="win-readme" label="Leia-me.txt" icon={icons.file} x={280} y={520} />
     <DesktopIcon id="win-folder3" label="Secreto" icon={icons.folder} x={900} y={500} />
     <DesktopIcon id="win-folder4" label="Stuff" icon={icons.folder} x={480} y={280} />
-    <DesktopIcon id="win-tabs" label="Tabs" icon={icons.tabs} x={150} y={280} />
+    <DesktopIcon id="win-tabs" label="Tabs" icon={icons.folder} x={150} y={280} />
 
     <!-- Janela: Lixeira (Spotify) -->
     <Window id="win-trash" title="Lixeira - Spotify" width={450} height={350} x={150} y={80}>
@@ -478,29 +448,27 @@ Valeu!
  
 <!-- Janela: Tabs -->
 <Window id="win-tabs" title="Tabs - Oficial Tabs" width={1150} height={750} x={300} y={50}>
-  <div class="tabs-window-content" style="margin: -8px; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 16px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); height: calc(100% + 16px);">
-    <p class="tabs-main-title" style="text-align: center; width: 100%; color: #4a8c0a; font-size: 12px; text-shadow: 1px 1px 0 #000; animation: tabsTitlePulse 1s ease-in-out infinite;">OFICIAL TABS - WALLITA</p>
-    <div class="tabs-options-row" style="display: flex; flex-direction: row; gap: 16px; justify-content: center;">
-      <div class="tabs-option-card" style="display: flex; flex-direction: column; align-items: center; gap: 10px; border: 3px solid #4a8c0a; padding: 10px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); box-shadow: 2px 2px 0 rgba(0,0,0,0.3);"> 
-        <img src="/images/tabs_atma_null.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain; animation: wiggle 0.2s ease-in-out infinite;" />
-        <p style="font-size: 10px; color: #242424; text-align: center; font-weight: bold;">Incluso: Tabs oficiais de guitarra e baixo da<br>"atma Null"</p>
+  <div class="tabs-window-content">
+    <p class="tabs-main-title">OFICIAL TABS - WALLITA</p>
+    <div class="tabs-options-row">
+      <div class="tabs-option-card"> 
+        <img src="/images/tabs_atma_null.png" alt="Tabs" class="tabs-img" />
+        <p class="tabs-card-desc">Incluso: Tabs oficiais de guitarra e baixo da "atma&nbsp;Null"</p>
         <a
           href="https://wa.me/5545991587581?text=FALA%20COMIGO%20xups%2C%20aka%20Davillita%2C%20o%20guitarrista%20mais%20lindo%20e%20perfeito%20do%20universo%20💚%0A%0AQUERO%20as%20TABS%20da%20%22atma%20Null%22!!"
           target="_blank"
           class="tabs-btn"
-          style="display: block; padding: 20px 14px; background: linear-gradient(180deg, #6bb90e 0%, #4a8c0a 100%); color: #fff; text-decoration: none; font-size: 14px; text-align: center; border: 2px outset #8ed922; text-shadow: 1px 1px 0 #000;"
         >
           Quero as tabs da "atma Null"
         </a>
       </div>
-      <div class="tabs-option-card" style="display: flex; flex-direction: column; align-items: center; gap: 10px; border: 3px solid #4a8c0a; padding: 10px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); box-shadow: 2px 2px 0 rgba(0,0,0,0.3);">
-        <img src="/images/tabs_MAKE_YOU_BLUSH.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain; animation: wiggle 0.2s ease-in-out infinite;" />
-        <p style="font-size: 10px; color: #242424; text-align: center; font-weight: bold;">Incluso: Tabs oficiais de guitarra, baixo e bateria da "MAKE YOU BLUSH"</p>
+      <div class="tabs-option-card">
+        <img src="/images/tabs_MAKE_YOU_BLUSH.png" alt="Tabs" class="tabs-img" />
+        <p class="tabs-card-desc">Incluso: Tabs oficiais de guitarra, baixo e bateria da "MAKE YOU BLUSH"</p>
         <a
           href="https://wa.me/5545991587581?text=FALA%20COMIGO%20xups%2C%20aka%20Davillita%2C%20o%20guitarrista%20mais%20lindo%20e%20perfeito%20do%20universo%20💚%0A%0AQUERO%20as%20TABS%20da%20%22MAKE%20YOU%20BLUSH%22!!"
           target="_blank"
-          class="tabs-btn"
-          style="display: block; padding: 20px 14px; background: linear-gradient(180deg, #cedd0b 0%, #cedd0b 100%); color: #fff; text-decoration: none; font-size: 14px; text-align: center; border: 2px outset #8ed922; text-shadow: 1px 1px 0 #000;"
+          class="tabs-btn tabs-btn-yellow"
         >
           Quero as tabs da "MAKE YOU BLUSH"
         </a>
@@ -1896,6 +1864,8 @@ Valeu!
   background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%);
   height: 100%;
   border: 3px solid #4a8c0a;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 :global(.tabs-main-title) {
@@ -1908,11 +1878,12 @@ Valeu!
   animation: tabsTitlePulse 1s ease-in-out infinite;
 }
 
-
 :global(.tabs-options-row) {
   display: flex;
+  flex-direction: row;
   gap: 16px;
   justify-content: center;
+  width: 100%;
 }
 
 :global(.tabs-option-card) {
@@ -1922,17 +1893,31 @@ Valeu!
   gap: 10px;
   border: 3px solid #4a8c0a;
   padding: 10px;
-  background: #fff;
+  background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%);
   box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 }
 
+:global(.tabs-img) {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  animation: wiggle 0.2s ease-in-out infinite;
+}
+
+:global(.tabs-card-desc) {
+  font-size: 10px;
+  color: #242424;
+  text-align: center;
+  font-weight: bold;
+}
+
 :global(.tabs-btn) {
-  display: inline-block;
-  padding: 10px 14px;
+  display: block;
+  padding: 20px 14px;
   background: linear-gradient(180deg, #6bb90e 0%, #4a8c0a 100%);
   color: #fff !important;
   text-decoration: none !important;
-  font-size: 8px;
+  font-size: 14px;
   text-align: center;
   border: 2px outset #8ed922;
   text-shadow: 1px 1px 0 #000;
@@ -1940,23 +1925,83 @@ Valeu!
   animation: tabsBtnPulse 1s ease-in-out infinite;
 }
 
-@keyframes tabsBtnPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); box-shadow: 0 0 15px #6bb90e; }
+:global(.tabs-btn-yellow) {
+  background: linear-gradient(180deg, #cedd0b 0%, #b8c50a 100%) !important;
 }
 
 :global(.tabs-btn:hover) {
   background: linear-gradient(180deg, #8ed922 0%, #6bb90e 100%);
 }
 
-@keyframes wiggle {
-  0%, 100% { transform: rotate(-0.5deg); }
-  50% { transform: rotate(0.5deg); }
+@keyframes tabsTitlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
 }
 
-@keyframes wiggleBig {
-  0%, 100% { transform: rotate(-0.5deg) scale(1.1); }
-  50% { transform: rotate(0.5deg) scale(1.1); }
+@keyframes tabsBtnPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); box-shadow: 0 0 15px #6bb90e; }
+}
+
+/* TABS MOBILE */
+@media screen and (max-width: 768px) {
+  :global(.tabs-window-content) {
+    padding: 6px;
+    gap: 6px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  :global(.tabs-options-row) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    flex: 1;
+    width: 100%;
+  }
+
+  :global(.tabs-option-card) {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  :global(.tabs-img) {
+    width: 160px !important;
+    height: 160px !important;
+    align-self: center;
+  }
+
+  :global(.tabs-main-title) {
+    font-size: 7px;
+  }
+
+  :global(.tabs-card-desc) {
+    font-size: 6px;
+    line-height: 1.6;
+    max-width: 100%;
+    word-break: keep-all;
+    white-space: normal;
+    text-align: center;
+  }
+
+  :global(.tabs-btn) {
+    font-size: 7px !important;
+    padding: 8px !important;
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 1.6;
+    word-break: keep-all;
+  }
+
+  #win-tabs {
+    max-width: 95vw !important;
+    max-height: 85vh !important;
+  }
 }
 
 /* ========== VIDEO LIST ========== */
@@ -3100,19 +3145,5 @@ videoBackBtn?.addEventListener('click', () => {
     list.style.display = 'flex';
     backBtn.style.display = 'none';
   }
-});
-
-// ========== HOVER NAS TABS ==========
-document.querySelectorAll('.tabs-option-card').forEach(card => {
-  const img = card.querySelector('img') as HTMLElement;
-  if (!img) return;
-
-  card.addEventListener('mouseenter', () => {
-    img.style.animation = 'wiggleBig 0.2s ease-in-out infinite';
-  });
-
-  card.addEventListener('mouseleave', () => {
-    img.style.animation = 'wiggle 0.2s ease-in-out infinite';
-  });
 });
 </script>
