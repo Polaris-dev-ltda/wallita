@@ -2591,26 +2591,26 @@ Valeu!
     const screenH = window.innerHeight - 40; // menos taskbar
 
     const icons = document.querySelectorAll('.desktop-icon');
-    // Distribuir em 3 colunas pela tela toda
-    const positions = [
-      { x: 10, y: 10 },                          // Lixeira - topo esquerdo
-      { x: screenW - 70, y: 10 },                // Fotos - topo direito
-      { x: Math.floor(screenW / 2) - 30, y: 10 }, // Videos - topo centro
-      { x: 10, y: Math.floor(screenH / 2) - 40 }, // Audio - meio esquerdo
-      { x: screenW - 70, y: Math.floor(screenH / 2) - 40 }, // Agenda - meio direito
-      { x: Math.floor(screenW / 2) - 30, y: Math.floor(screenH / 2) - 40 }, // Downloads - centro
-      { x: 10, y: screenH - 120 },               // Leia-me - baixo esquerdo
-      { x: screenW - 70, y: screenH - 120 },     // Secreto - baixo direito
-      { x: Math.floor(screenW / 2) - 30, y: screenH - 120 }, // Stuff - baixo centro
-    ];
+    // Grade automática: 3 colunas, quantas linhas forem necessárias
+    const cols = 3;
+    const marginX = 10;
+    const marginTop = 10;
+    const usableW = screenW - marginX * 2;
+    const colWidth = usableW / cols;
 
-    icons.forEach((icon, i) => {
-      if (positions[i]) {
-        (icon as HTMLElement).style.left = Math.max(5, positions[i].x) + 'px';
-        (icon as HTMLElement).style.top = Math.max(5, positions[i].y) + 'px';
-      }
-    });
-  }
+    const rows = Math.ceil(icons.length / cols);
+    const usableH = screenH - marginTop - 20;
+    const rowHeight = rows > 1 ? usableH / (rows - 1) : 0;
+
+  icons.forEach((icon, i) => {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const x = marginX + col * colWidth;
+    const y = marginTop + row * rowHeight;
+    (icon as HTMLElement).style.left = Math.max(5, x) + 'px';
+    (icon as HTMLElement).style.top = Math.max(5, y) + 'px';
+  });
+}
 
   // Animação de vírus na abertura - posições fixas espalhadas
   function startVirusAnimation() {
