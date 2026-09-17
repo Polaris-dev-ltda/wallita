@@ -252,6 +252,7 @@ const photos = [
     <DesktopIcon id="win-folder3" label="Secreto" icon={icons.folder} x={900} y={500} />
     <DesktopIcon id="win-folder4" label="Stuff" icon={icons.folder} x={480} y={280} />
     <DesktopIcon id="win-tabs" label="Tabs" icon={icons.folder} x={150} y={280} />
+    <DesktopIcon id="win-merch" label="Merch" icon={icons.folder} x={750} y={280} />
 
     <!-- Janela: Lixeira (Spotify) -->
     <Window id="win-trash" title="Lixeira - Spotify" width={450} height={350} x={150} y={80}>
@@ -448,31 +449,49 @@ Valeu!
  
 <!-- Janela: Tabs -->
 <Window id="win-tabs" title="Tabs - Oficial Tabs" width={1150} height={750} x={300} y={50}>
-  <div class="tabs-window-content" style="margin: -8px; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 16px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); height: calc(100% + 16px);">
-    <p class="tabs-main-title" style="text-align: center; width: 100%; color: #4a8c0a; font-size: 12px; text-shadow: 1px 1px 0 #000; animation: tabsTitlePulse 1s ease-in-out infinite;">OFICIAL TABS - WALLITA</p>
-    <div class="tabs-options-row" style="display: flex; flex-direction: row; gap: 16px; justify-content: center;">
-      <div class="tabs-option-card" style="display: flex; flex-direction: column; align-items: center; gap: 10px; border: 3px solid #4a8c0a; padding: 10px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); box-shadow: 2px 2px 0 rgba(0,0,0,0.3);"> 
-        <img src="/images/tabs_atma_null.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain;" />
-        <p style="font-size: 10px; color: #242424; text-align: center; font-weight: bold;">Incluso: Tabs oficiais de guitarra e baixo da<br>"atma Null"</p>
+  <div class="tabs-window-content">
+    <p class="tabs-main-title">OFICIAL TABS - WALLITA</p>
+    <div class="tabs-options-row">
+      <div class="tabs-option-card"> 
+        <img src="/images/tabs_atma_null.png" alt="Tabs" class="tabs-img" />
+        <p class="tabs-card-desc">Incluso: Tabs oficiais de guitarra<br>e baixo da "atma&nbsp;Null"</p>
         <a
           href="https://wa.me/5545991587581?text=FALA%20COMIGO%20xups%2C%20aka%20Davillita%2C%20o%20guitarrista%20mais%20lindo%20e%20perfeito%20do%20universo%20💚%0A%0AQUERO%20as%20TABS%20da%20%22atma%20Null%22!!"
           target="_blank"
           class="tabs-btn"
-          style="display: block; padding: 20px 14px; background: linear-gradient(180deg, #6bb90e 0%, #4a8c0a 100%); color: #fff; text-decoration: none; font-size: 14px; text-align: center; border: 2px outset #8ed922; text-shadow: 1px 1px 0 #000;"
         >
           Quero as tabs da "atma Null"
         </a>
       </div>
-      <div class="tabs-option-card" style="display: flex; flex-direction: column; align-items: center; gap: 10px; border: 3px solid #4a8c0a; padding: 10px; background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%); box-shadow: 2px 2px 0 rgba(0,0,0,0.3);">
-        <img src="/images/tabs_MAKE_YOU_BLUSH.png" alt="Tabs" style="width: 500px; height: 500px; object-fit: contain;" />
-        <p style="font-size: 10px; color: #242424; text-align: center; font-weight: bold;">Incluso: Tabs oficiais de guitarra, baixo e bateria da "MAKE YOU BLUSH"</p>
+      <div class="tabs-option-card">
+        <img src="/images/tabs_MAKE_YOU_BLUSH.png" alt="Tabs" class="tabs-img" />
+        <p class="tabs-card-desc">Incluso: Tabs oficiais de guitarra, baixo e bateria da "MAKE YOU BLUSH"</p>
         <a
           href="https://wa.me/5545991587581?text=FALA%20COMIGO%20xups%2C%20aka%20Davillita%2C%20o%20guitarrista%20mais%20lindo%20e%20perfeito%20do%20universo%20💚%0A%0AQUERO%20as%20TABS%20da%20%22MAKE%20YOU%20BLUSH%22!!"
           target="_blank"
-          class="tabs-btn"
-          style="display: block; padding: 20px 14px; background: linear-gradient(180deg, #cedd0b 0%, #cedd0b 100%); color: #fff; text-decoration: none; font-size: 14px; text-align: center; border: 2px outset #8ed922; text-shadow: 1px 1px 0 #000;"
+          class="tabs-btn tabs-btn-yellow"
         >
           Quero as tabs da "MAKE YOU BLUSH"
+        </a>
+      </div>
+    </div>
+  </div>
+</Window>
+
+<!-- Janela: Merch -->
+<Window id="win-merch" title="Merch - Loja Oficial" width={850} height={750} x={300} y={50}>
+  <div class="merchwin-window-content">
+    <p class="merchwin-main-title">🛒 LOJA WALLITA - MERCH!!! 🛒</p>
+    <div class="merchwin-options-row">
+      <div class="merchwin-option-card"> 
+        <img src="/images/camiseta_modelos.png" alt="Modelos Camisetas" class="merchwin-img" />
+        <p class="merchwin-card-desc">Camisetas Wallita</p>
+        <a
+          href="https://wa.me/5545991587581?text=FALA%20COMIGO!%20Quero%20comprar%20uma%20camiseta%20da%20wallita!%20%F0%9F%A4%98%0A%0A*Cor%3A*%0A%E2%98%90%20Preta%0A%E2%98%90%20Branca%0A%0A*Tamanho%3A*%0A%E2%98%90%20M%0A%E2%98%90%20G%0A%E2%98%90%20GG%0A%E2%98%90%20XG%0A%0A*Valor%3A*%20R%24%2075%2C00%0Apix%3A%20wallitaband%40gmail.com%0A%0A(Se%20voc%C3%AA%20n%C3%A3o%20for%20de%20Cascavel%2C%20a%20camiseta%20fica%20um%20pouco%20mais%20cara%20por%20conta%20do%20frete.%20Mas%20combinamos%20certinho%20como%20faremos%20o%20envio!)%0A(Se%20voc%C3%AA%20for%20de%20Cascavel%20mande%20seu%20endere%C3%A7o%20junto%2C%20logo%20mais%20faremos%20a%20sua%20entrega!)%0A%0AValeu!%20%F0%9F%92%9A"
+          target="_blank"
+          class="merchwin-btn"
+        >
+          Quero uma camiseta!
         </a>
       </div>
     </div>
@@ -1866,6 +1885,8 @@ Valeu!
   background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%);
   height: 100%;
   border: 3px solid #4a8c0a;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 :global(.tabs-main-title) {
@@ -1878,11 +1899,12 @@ Valeu!
   animation: tabsTitlePulse 1s ease-in-out infinite;
 }
 
-
 :global(.tabs-options-row) {
   display: flex;
+  flex-direction: row;
   gap: 16px;
   justify-content: center;
+  width: 100%;
 }
 
 :global(.tabs-option-card) {
@@ -1892,17 +1914,31 @@ Valeu!
   gap: 10px;
   border: 3px solid #4a8c0a;
   padding: 10px;
-  background: #fff;
+  background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%);
   box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 }
 
+:global(.tabs-img) {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  animation: wiggle 0.2s ease-in-out infinite;
+}
+
+:global(.tabs-card-desc) {
+  font-size: 10px;
+  color: #242424;
+  text-align: center;
+  font-weight: bold;
+}
+
 :global(.tabs-btn) {
-  display: inline-block;
-  padding: 10px 14px;
+  display: block;
+  padding: 20px 14px;
   background: linear-gradient(180deg, #6bb90e 0%, #4a8c0a 100%);
   color: #fff !important;
   text-decoration: none !important;
-  font-size: 8px;
+  font-size: 14px;
   text-align: center;
   border: 2px outset #8ed922;
   text-shadow: 1px 1px 0 #000;
@@ -1910,13 +1946,228 @@ Valeu!
   animation: tabsBtnPulse 1s ease-in-out infinite;
 }
 
+:global(.tabs-btn-yellow) {
+  background: linear-gradient(180deg, #cedd0b 0%, #b8c50a 100%) !important;
+}
+
+:global(.tabs-btn:hover) {
+  background: linear-gradient(180deg, #8ed922 0%, #6bb90e 100%);
+}
+
+@keyframes tabsTitlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
 @keyframes tabsBtnPulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.05); box-shadow: 0 0 15px #6bb90e; }
 }
 
-:global(.tabs-btn:hover) {
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-0.5deg); }
+  50% { transform: rotate(0.5deg); }
+}
+
+/* ========== MERCH FOLDER WINDOW ========== */
+:global(.merchwin-window-content) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%);
+  height: 100%;
+  border: 3px solid #4a8c0a;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+:global(.merchwin-main-title) {
+  font-size: 12px;
+  font-weight: bold;
+  color: #4a8c0a;
+  text-shadow: 1px 1px 0 #000;
+  margin: 0;
+  text-align: center;
+  animation: tabsTitlePulse 1s ease-in-out infinite;
+}
+
+:global(.merchwin-options-row) {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
+}
+
+:global(.merchwin-option-card) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border: 3px solid #4a8c0a;
+  padding: 10px;
+  background: linear-gradient(180deg, #e8ffe8 0%, #c8f0c8 100%);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+:global(.merchwin-img) {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  animation: wiggle 0.2s ease-in-out infinite;
+}
+
+:global(.merchwin-card-desc) {
+  font-size: 10px;
+  color: #242424;
+  text-align: center;
+  font-weight: bold;
+}
+
+:global(.merchwin-btn) {
+  display: block;
+  padding: 20px 14px;
+  background: linear-gradient(180deg, #6bb90e 0%, #4a8c0a 100%);
+  color: #fff !important;
+  text-decoration: none !important;
+  font-size: 14px;
+  text-align: center;
+  border: 2px outset #8ed922;
+  text-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+  animation: tabsBtnPulse 1s ease-in-out infinite;
+}
+
+:global(.merchwin-btn-yellow) {
+  background: linear-gradient(180deg, #cedd0b 0%, #b8c50a 100%) !important;
+}
+
+:global(.merchwin-btn:hover) {
   background: linear-gradient(180deg, #8ed922 0%, #6bb90e 100%);
+}
+
+/* TABS MOBILE */
+@media screen and (max-width: 768px) {
+  :global(.tabs-window-content) {
+    padding: 6px;
+    gap: 6px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  :global(.tabs-options-row) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    flex: 1;
+    width: 100%;
+  }
+
+  :global(.tabs-option-card) {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  :global(.tabs-img) {
+    width: 220px !important;
+    height: 220px !important;
+    align-self: center;
+    animation: wiggle 0.2s ease-in-out infinite !important;
+  }
+
+  :global(.tabs-main-title) {
+    font-size: 7px;
+  }
+
+  :global(.tabs-card-desc) {
+    font-size: 6px;
+    line-height: 1.6;
+    max-width: 100%;
+    word-break: keep-all;
+    white-space: normal;
+    text-align: center;
+  }
+
+  :global(.tabs-btn) {
+    font-size: 7px !important;
+    padding: 8px !important;
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 1.6;
+    word-break: keep-all;
+  }
+
+  #win-tabs {
+    max-width: 95vw !important;
+    max-height: 85vh !important;
+  }
+
+  :global(.merchwin-window-content) {
+  padding: 6px;
+  gap: 6px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+:global(.merchwin-options-row) {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  flex: 1;
+  width: 100%;
+}
+
+:global(.merchwin-option-card) {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+:global(.merchwin-img) {
+  width: 220px !important;
+  height: 220px !important;
+  align-self: center;
+  animation: wiggle 0.2s ease-in-out infinite !important;
+}
+
+:global(.merchwin-main-title) {
+  font-size: 7px;
+}
+
+:global(.merchwin-card-desc) {
+  font-size: 6px;
+  line-height: 1.6;
+  max-width: 100%;
+  word-break: keep-all;
+  white-space: normal;
+  text-align: center;
+}
+
+:global(.merchwin-btn) {
+  font-size: 7px !important;
+  padding: 8px !important;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+#win-merch {
+  max-width: 95vw !important;
+  max-height: 85vh !important;
+}
+
 }
 
 /* ========== VIDEO LIST ========== */
