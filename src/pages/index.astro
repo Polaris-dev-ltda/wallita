@@ -2591,24 +2591,45 @@ Valeu!
     const screenH = window.innerHeight - 40; // menos taskbar
 
     const icons = document.querySelectorAll('.desktop-icon');
-    // Grade automática: 3 colunas, quantas linhas forem necessárias
-    const cols = 3;
-    const marginX = 10;
-    const marginTop = 10;
-    const usableW = screenW - marginX * 2;
-    const colWidth = usableW / cols;
 
-    const rows = Math.ceil(icons.length / cols);
-    const usableH = screenH - marginTop - 20;
-    const rowHeight = rows > 1 ? usableH / (rows - 1) : 0;
+    const iconW = 60;  // largura aproximada do ícone
+    const iconH = 90;  // altura aproximada (ícone + texto do label)
+    const margin = 8;
+
+    const maxX = Math.max(margin, screenW - iconW - margin);
+    const maxY = Math.max(margin, screenH - iconH - margin);
+
+    // Quantas colunas/linhas de "células" cabem na tela
+    const cols = Math.max(1, Math.floor(screenW / (iconW + margin)));
+    const rows = Math.max(1, Math.ceil(icons.length / cols));
+
+    const cellW = cols > 1 ? maxX / (cols - 1) : 0;
+    const cellH = rows > 1 ? maxY / (rows - 1) : 0;
+
+    // Embaralha a ordem das células, pra não ficar sempre no mesmo layout
+    const cellIndexes = Array.from({ length: cols * rows }, (_, i) => i);
+    for (let i = cellIndexes.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cellIndexes[i], cellIndexes[j]] = [cellIndexes[j], cellIndexes[i]];
+  }
 
   icons.forEach((icon, i) => {
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    const x = marginX + col * colWidth;
-    const y = marginTop + row * rowHeight;
-    (icon as HTMLElement).style.left = Math.max(5, x) + 'px';
-    (icon as HTMLElement).style.top = Math.max(5, y) + 'px';
+    const cellIndex = cellIndexes[i] ?? i;
+    const col = cellIndex % cols;
+    const row = Math.floor(cellIndex / cols);
+
+    const baseX = col * cellW;
+    const baseY = row * cellH;
+
+    // Um "tremido" aleatório dentro da célula, pra parecer espalhado
+    const jitterX = (Math.random() - 0.5) * (cellW * 0.4);
+    const jitterY = (Math.random() - 0.5) * (cellH * 0.4);
+
+    const x = Math.min(maxX, Math.max(margin, baseX + jitterX));
+    const y = Math.min(maxY, Math.max(margin, baseY + jitterY));
+
+    (icon as HTMLElement).style.left = x + 'px';
+    (icon as HTMLElement).style.top = y + 'px';
   });
 }
 
